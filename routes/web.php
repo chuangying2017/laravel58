@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+return view('welcome');
 });
+
+Route::get('active','Caiji\IndexController@index');
+
+Route::post('active/insert','Caiji\ApiActiveController@insert');
