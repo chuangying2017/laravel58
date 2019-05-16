@@ -4,8 +4,9 @@
 namespace App\Repository\Active;
 
 
-use App\Model\Active\MaActive;
+
 use App\Model\Active\MaCategory;
+
 
 class ActiveRepository
 {
@@ -38,7 +39,7 @@ class ActiveRepository
 
         unset($arr['createTime']);
 
-        $arr['create_at'] = $createTime;
+      //  $arr['create_at'] = date('Y-m-d H:i:s',$createTime);
 
         if ($ariseNum > 0)
         {
@@ -60,7 +61,7 @@ class ActiveRepository
 
             $res = MaCategory::create([
                 'title' => $category
-            ])->active()->sync($arr);
+            ])->active()->create($arr);
         }
 
         if ($res)
