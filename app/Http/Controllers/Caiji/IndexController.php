@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers\Caiji;
 
+use App\Repository\Active\ActiveRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class IndexController extends Controller
 {
+
+    protected $activeRepository;
+
+    public function __construct(ActiveRepository $activeRepository)
+    {
+        $this->activeRepository = $activeRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +23,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        return view('active.active');
+        return view('active.active',['data' => $this->activeRepository->select()]);
     }
 
     /**

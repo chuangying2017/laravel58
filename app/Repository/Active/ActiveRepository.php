@@ -39,7 +39,7 @@ class ActiveRepository
 
         unset($arr['createTime']);
 
-        $arr['created_at'] = date('Y-m-d H:i:s',$createTime);
+      //  $arr['create_at'] = date('Y-m-d H:i:s',$createTime);
 
         if ($ariseNum > 0)
         {
@@ -61,9 +61,7 @@ class ActiveRepository
 
             $res = MaCategory::create([
                 'title' => $category
-            ]);
-            $arr['category_id'] = $res->id;
-            $res = $res ->active()->create($arr);
+            ])->active()->create($arr);
         }
 
         if ($res)

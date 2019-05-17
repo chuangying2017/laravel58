@@ -10,8 +10,10 @@ class MaCategory extends Model
 
     protected $guarded = ['id'];
 
+    public $timestamps = false;
+
     public function active()
     {
-        return $this->hasMany(MaActive::class,'category_id','id');
+        return $this->hasMany(MaActive::class,'cid','id');
     }
 }
