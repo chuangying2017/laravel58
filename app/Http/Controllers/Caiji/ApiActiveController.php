@@ -21,7 +21,7 @@ class ApiActiveController extends Controller
     {
         $post = $request->post();
 
-        $res = $this->activeRepository->logic($post);
+        $res = $this->activeRepository->save($post);
 
         return response()->json($res)->setStatusCode(201);
     }

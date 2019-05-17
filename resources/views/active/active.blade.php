@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>哥哥博客</title>
+    <title>博客</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
     <meta name="renderer" content="webkit">
@@ -30,7 +30,7 @@
 <header id="top" role="banner" class="transition">
     <div class="container">
         <div class="navbar-header transition">
-            <a href="index.html" title="首页"><img src="{{asset('static/active/picture/logo.jpg')}}" alt="哥哥博客" title="首页" /></a>
+            <a href="index.html" title="首页">首页</a>
         </div>
         <ul class="nav navbar-nav navbar-left" id="jsddm">
             <li class="nav-news js-show-menu"><a href="list.html" target="_blank">心情随笔</a></li>
@@ -38,17 +38,17 @@
             <li class="nav-news"><a href="list.html" target="_blank">视频教程</a></li>
             <li class="nav-news"><a href="list.html" target="_blank">网页博客模版下载<span class="nums-prompt"></span></a></li>
         </ul>
-        <div class="input-group souIn">
+   {{--     <div class="input-group souIn">
             <input type="text" class="form-control input-group" >
             <span class="input-group-addon btn btn-default">搜索</span>
-        </div>
+        </div>--}}
     </div>
 </header>
 
 <div class="placeholder-height"></div>
 <div class="container" id="index">
     <div class="wrap-left pull-left col-md-6">
-        <div class="big-pic-box">
+ {{--       <div class="big-pic-box">
             <div class="big-pic">
                 <a href="article.html" target="_blank" class="transition" title="醒醒吧，腾讯、网易称霸的游戏行业，谁都没机会成为第三">
                     <div class="back-img"><img src="{{asset('static/active/picture/061708387437.jpg')}}"  alt="醒醒吧，腾讯、网易称霸的游戏行业，谁都没机会成为第三"></div>
@@ -77,7 +77,7 @@
                     </div>
                 </a>
             </div>
-        </div>
+        </div>--}}
         <div class="mod-info-flow">
             <div class="mod-b mod-art" data-aid="213665">
                 <div class="mod-angle">热</div>
@@ -216,13 +216,13 @@
                 </a>
             </div>
             <div class="clear"></div>
-            <ul class="rumorlist">
+        {{--    <ul class="rumorlist">
                 <li>
                     <p>籍贯：山西 晋城</p>
                     <p>爱好：喜欢编程，就是技术太菜。</p>
                     <p>爱分享 音乐、视频和软件。</p>
                 </li>
-            </ul>
+            </ul>--}}
 
         </div>
         <div class="placeholder"></div>
