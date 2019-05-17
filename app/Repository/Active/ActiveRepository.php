@@ -39,7 +39,7 @@ class ActiveRepository
 
         unset($arr['createTime']);
 
-      //  $arr['create_at'] = date('Y-m-d H:i:s',$createTime);
+        $arr['created_at'] = date('Y-m-d H:i:s',$createTime);
 
         if ($ariseNum > 0)
         {
@@ -50,7 +50,46 @@ class ActiveRepository
 
         if (is_array($arrayRes))
         {
+            $lastVisit = null;
+            foreach($arrayRes as $k => $v)
+            {
 
+                if ($k>=1 && $lastVisit == null)
+                {
+                    $categoryModel = false;
+                }else{
+                    $categoryModel = MaCategory::where('title',$v)->first();
+                }
+
+                if ($categoryModel)
+                {
+                    $lastVisit = $categoryModel;
+                    continue;
+                }else{
+
+                    if ($lastVisit)
+                    {
+                        $v = $lastVisit->title . $stringAriseNum . $v;
+                        $res = MaCategory::create(['title' => $v,'created_at' => $arr['created_at'],'pid' => $lastVisit->id]);
+                        $res->path = $lastVisit->path . '-' . $res->id;
+                        $res->save();
+                        $lastVisit = $res;
+                    }else{
+                        if (isset($res) && is_object($res))
+                        {
+                            $res = MaCategory::create(['title' => $v,'created_at' => $arr['created_at'], 'pid' => $res->id, 'path'=> $res->path]);
+                            $res->path = $res->path.'-'.$res->id;
+                            $res->save();
+                        }else{
+                            $res = MaCategory::create(['title' => $v,'created_at' => $arr['created_at']]);
+                            $res->path = $res->id;
+                            $res->save();
+                        }
+
+                    }
+
+                }
+            }
         }else{
             $categoryModel = MaCategory::where('title',$arrayRes)->first();
 
@@ -60,8 +99,13 @@ class ActiveRepository
             }
 
             $res = MaCategory::create([
-                'title' => $category
-            ])->active()->create($arr);
+                'title' => $category,
+                'created_at' => $arr['created_at']
+            ]);
+
+            $res->path = $res->id;$res->save();
+
+            $res->active()->create($arr);
         }
 
         if ($res)
