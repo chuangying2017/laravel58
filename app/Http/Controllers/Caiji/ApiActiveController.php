@@ -25,4 +25,10 @@ class ApiActiveController extends Controller
 
         return response()->json($res)->setStatusCode(201);
     }
+
+    public function test()
+    {
+        $res = $this->activeRepository->save();
+        dd($res);
+    }
 }

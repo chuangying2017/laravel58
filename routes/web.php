@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('active','Caiji\IndexController@index');
+Route::group(['namespace'=>'Caiji'],function (){
+    Route::get('active','IndexController@index');
 
-Route::post('active/insert','Caiji\ApiActiveController@insert');
+    Route::post('active/insert','ApiActiveController@insert');
+
+    Route::get('test', 'ApiActiveController@test');
+});

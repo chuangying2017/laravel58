@@ -5,9 +5,13 @@ namespace App\Repository\Active;
 
 
 
+use App\Model\Active\MaActive;
 use App\Model\Active\MaCategory;
+use App\Model\ModelConfig;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 
 class ActiveRepository
@@ -20,16 +24,18 @@ class ActiveRepository
      * @param $data array
      * @return array
      */
-    public function save(array $data): array
+    public function save(array $data=[])
     {
-        $res = ['status'=>2 ,'msg' => 'operationFail'];
-        $arr = json_decode(base64_decode($data['data']),true);
-        foreach ($arr as $value)
-        {
-            $res = $this->logic($value);
-        }
-
-        return $res;
+           $res = ['status'=>2 ,'msg' => 'fail'];
+           $data['data'] = Storage::disk('local')->get('data.txt');
+           $arr = json_decode(base64_decode($data['data']),true);
+ /*           foreach ($arr as $value)
+           {
+              // $res = $this->batchInsert($value);
+           }
+           $string = $data['data'];*/
+            $res = $this->batchInsert($arr);
+           return $res;
     }
 
     /**
@@ -46,7 +52,7 @@ class ActiveRepository
 
         $ariseNum = substr_count($category,$stringAriseNum);
 
-        $createTime = $arr['createTime'];
+        $createTime = $arr[ModelConfig::$time];
 
         $arr['createTime'] = date('Y-m-d H:i:s',$createTime);
 
@@ -80,18 +86,18 @@ class ActiveRepository
 
                     if ($lastVisit)
                     {
-                        $res = MaCategory::create(['title' => $v,'created_at' => $arr['createTime'],'pid' => $lastVisit->id]);
+                        $res = MaCategory::create(['title' => $v, ModelConfig::$time => $arr[ModelConfig::$time],'pid' => $lastVisit->id]);
                         $res->path = $lastVisit->path . '-' . $res->id;
                         $res->save();
                         $lastVisit = $res;
                     }else{
                         if (isset($res) && is_object($res))
                         {
-                            $res = MaCategory::create(['title' => $v,'createTime' => $arr['createTime'], 'pid' => $res->id, 'path'=> $res->path]);
+                            $res = MaCategory::create(['title' => $v, ModelConfig::$time => $arr[ModelConfig::$time], 'pid' => $res->id, 'path'=> $res->path]);
                             $res->path = $res->path.'-'.$res->id;
                             $res->save();
                         }else{
-                            $res = MaCategory::create(['title' => $v,'createTime' => $arr['createTime']]);
+                            $res = MaCategory::create(['title' => $v, ModelConfig::$time => $arr[ModelConfig::$time]]);
                             $res->path = $res->id;
                             $res->save();
                         }
@@ -111,7 +117,7 @@ class ActiveRepository
 
             $res = MaCategory::create([
                 'title' => $category,
-                'created_at' => $arr['createTime']
+                'created_at' => $arr[ModelConfig::$time]
             ]);
 
             $res->path = $res->id;$res->save();
@@ -134,15 +140,35 @@ class ActiveRepository
 
     /**
      * 批量插入数据 逻辑操作
+     * @param array $array
+     * @return array
      */
-    public function batchInsert()
+    public function batchInsert(array $array): array
     {
+        //首先获取数据
 
+        //从数据库获取所有的分类
+        $all_category = MaCategory::all();
+
+        if ($all_category)
+        {
+            return ['value' => $this->insertData(MaActive::class,$array)];
+        }
+    }
+
+    /**
+     * @param string $Model
+     * @param $data
+     * @return Model
+     */
+    public function insertData($Model, $data)
+    {
+        return $Model::insert($data);
     }
 
     public function select()
     {
-        $fetchCurrent = MaCategory::with('active')->whereDate('created_at','<=',Carbon::now()->toDateTimeString())->get();
+        $fetchCurrent = MaCategory::with('active')->whereDate(ModelConfig::$time,'<=',Carbon::now()->toDateTimeString())->get();
 
         return $fetchCurrent;
     }
