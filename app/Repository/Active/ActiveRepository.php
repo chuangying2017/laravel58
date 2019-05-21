@@ -148,23 +148,16 @@ class ActiveRepository
         //首先获取数据
 
         //从数据库获取所有的分类
-        $all_category = MaCategory::all();
+        $all_category = MaCategory::all()->toArray();
 
-        if ($all_category)
+        if (empty($all_category))
         {
-            return ['value' => $this->insertData(MaActive::class,$array)];
+
         }
+
+
     }
 
-    /**
-     * @param string $Model
-     * @param $data
-     * @return Model
-     */
-    public function insertData($Model, $data)
-    {
-        return $Model::insert($data);
-    }
 
     public function select()
     {
