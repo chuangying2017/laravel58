@@ -14,7 +14,7 @@ class MaCategory extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'time' => 'Y-m-d H:i:s',
+        'createTime' => 'Y-m-d H:i:s',
     ];
 
     /**

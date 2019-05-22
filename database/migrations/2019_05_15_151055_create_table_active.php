@@ -20,7 +20,7 @@ class CreateTableActive extends Migration
             $table->string('title')->comment('文章标题');
             $table->string('description',1000)->comment('文章详情');
             $table->text('content')->comment('文章内容');
-            $table->bigInteger('time')->comment('创建时间');
+            $table->bigInteger('createTime')->comment('创建时间');
         });
     }
 

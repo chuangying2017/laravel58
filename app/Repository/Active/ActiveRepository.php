@@ -10,8 +10,11 @@ use App\Model\Active\MaCategory;
 use App\Model\ModelConfig;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
+use mysql_xdevapi\Exception;
 
 
 class ActiveRepository
@@ -26,15 +29,17 @@ class ActiveRepository
      */
     public function save(array $data=[])
     {
-           $res = ['status'=>2 ,'msg' => 'fail'];
-           $data['data'] = Storage::disk('local')->get('data.txt');
-           $arr = json_decode(base64_decode($data['data']),true);
+
+           $res = ['status'=>2 ,'msg' => 'successfully'];
+            $data = Storage::disk('local')->get('data.txt');
+            $arr = json_decode(base64_decode($data),true);
  /*           foreach ($arr as $value)
            {
               // $res = $this->batchInsert($value);
            }
            $string = $data['data'];*/
-            $res = $this->batchInsert($arr);
+           $res = $this->batchInsert($arr);
+
            return $res;
     }
 
@@ -145,17 +150,72 @@ class ActiveRepository
      */
     public function batchInsert(array $array): array
     {
+        $active_arr = [];//拼装好所有文章的数据放这里
+        $category_data = [];//拼装所有的分类 包括分层级关系
+        $category_already = [];//保存已经存在的分类
         //首先获取数据
 
         //从数据库获取所有的分类
         $all_category = MaCategory::all()->toArray();
-
+        $dare = date('H:i:s');
         if (empty($all_category))
         {
+            $array = ModelConfig::unique_multidim_array($array,'category');
+
+            foreach ($array as $k => $item) {
+
+               if (strpos($item['category'],'>') !== false)
+               {
+                    //组合已经有>符号
+                   $already = explode('>', $item['category']);
+
+                   $cid = 0;
+
+                   foreach ($already as $cate)
+                   {
+                        $cate_arr = ['title'=>$cate,ModelConfig::$time => $item[ModelConfig::$time]];
+                        $selfClass = MaCategory::create($cate_arr);
+                        if (!in_array($cate,$category_already))
+                        {
+                            $category_already[] = $cate;
+                        }
+                        if ($cid<1)
+                        {
+                            $selfClass->path = $selfClass->id;
+                        }else{
+                            $selfClass->path = $cid . '-' .$selfClass->id;
+                            $selfClass->pid = $cid;
+                        }
+
+                        $cid = $selfClass->id;
+
+                        $selfClass->save();
+                   }
+                   $item['cid'] = $cid;
+                   $active_arr[] = $item;
+
+               }else{
+
+               }
+
+            }
+
+        }else{
 
         }
+        $active_arr[] = ['start_date' => $dare, 'end_date'=> date('H:i:s')];
+        dd($active_arr);
+        try{
+            MaActive::insert($active_arr);
 
+            $result = ['status'=> 'success'];
 
+        }catch (Exception $exception)
+        {
+            $result = ['status'=>'fail', 'msg' => $exception->getMessage()];
+        }
+
+        return $result;
     }
 
 
@@ -164,5 +224,16 @@ class ActiveRepository
         $fetchCurrent = MaCategory::with('active')->whereDate(ModelConfig::$time,'<=',Carbon::now()->toDateTimeString())->get();
 
         return $fetchCurrent;
+    }
+
+    public function array_only(array $arr)
+    {
+        return Arr::only($arr, [
+            'title',
+            ModelConfig::$time,
+            'category',
+            'content',
+            'description'
+        ]);
     }
 }

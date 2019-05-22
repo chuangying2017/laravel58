@@ -15,7 +15,7 @@ class MaActive extends Model
     public $timestamps = false;
 
     protected $dates = [
-        'time',
+        'createTime',
     ];
 
     public function category()
