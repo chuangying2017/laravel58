@@ -25,9 +25,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $file=Storage::disk('local')->get('test1.txt');
-        dd(base64_decode($file['data']));
-       # return view('active.active',['data' => $this->activeRepository->select()]);
+        return view('active.active',['data' => $this->activeRepository->select()]);
     }
 
     /**

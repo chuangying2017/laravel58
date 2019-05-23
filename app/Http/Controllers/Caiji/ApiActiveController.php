@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Caiji;
 
 use App\Repository\Active\ActiveRepository;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +29,11 @@ class ApiActiveController extends Controller
 
     public function test()
     {
-        $res = $this->activeRepository->save();
+        try {
+            $res = $this->activeRepository->save();
+        } catch (FileNotFoundException $e) {
+            $res = $e->getMessage();
+        }
         dd($res);
     }
 }

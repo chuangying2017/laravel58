@@ -31,7 +31,7 @@ class ActiveRepository
      */
     public function save(array $data=[]):array
     {
-            $data = Storage::disk('local')->get('data_test.txt');
+            $data = Storage::disk('local')->get('test3.txt');
 
 
             $arr = json_decode(base64_decode($data),true);
@@ -185,7 +185,7 @@ class ActiveRepository
 
     public function select()
     {
-        $fetchCurrent = MaCategory::with('active')->whereDate(ModelConfig::$time,'<=',Carbon::now()->toDateTimeString())->get();
+        $fetchCurrent = MaCategory::with('active')->where(ModelConfig::$time,'<=',time())->get();
 
         return $fetchCurrent;
     }
@@ -280,6 +280,7 @@ class ActiveRepository
                     $selfClass->save();
                 }
                 $item['cid'] = $cid;
+                $item['category_name'] = end($already);
                 $active_arr[] = $item;
                 $cid =0;
                 $path = '';
@@ -295,7 +296,9 @@ class ActiveRepository
                 $arr = ['title'=>$item['category'],ModelConfig::$time=>$item[ModelConfig::$time]];
                 $cateCreate = MaCategory::create($arr);
                 $category_id[$item['category']] = $cateCreate->id;
-                $active_arr['cid'] = $cateCreate->id;
+                $item['cid'] = $cateCreate->id;
+                $item['category_name'] = $item['category'];
+                $active_arr[] = $item;
             }
 
         }
