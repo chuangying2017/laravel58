@@ -32,19 +32,14 @@ class ActiveRepository
     {
 
             $res = ['status'=>2 ,'msg' => 'successfully'];
-            $data = Storage::disk('local')->get('test3.txt');
+            $data = Storage::disk('local')->get('data_test.txt');
 
 
             $arr = json_decode(base64_decode($data),true);
 
- /*           foreach ($arr as $value)
-           {
-              // $res = $this->batchInsert($value);
-           }
-           $string = $data['data'];*/
-           $res = $this->batchInsert($arr);
+            $res = $this->batchInsert($arr);
 
-           return $res;
+            return $res;
     }
 
     /**
@@ -157,29 +152,31 @@ class ActiveRepository
         $active_arr = [];//拼装好所有文章的数据放这里
         $category_data = [];//拼装所有的分类 包括分层级关系
         $category_already = [];//保存已经存在的分类
+        $category_id = [];//保存分类名与对应的id
         //首先获取数据
 
         //从数据库获取所有的分类
         $all_category = MaCategory::all()->toArray();
 
+        $array = ModelConfig::unique_multidim_array($array,'category');
+
         if (empty($all_category))
         {
-            $array = ModelConfig::unique_multidim_array($array,'category');
 
             foreach ($array as $k => $item) {
+
+                $cid = 0;
+
+                $path = '';
+
+                $category_name = null;//保存上一次的类名
+
+                $use_greater_than = '>';//使用拼接符号
 
                if (strpos($item['category'],'>') !== false)
                {
                     //组合已经有>符号
                    $already = explode('>', $item['category']);
-
-                   $cid = 0;
-
-                   $path = '';
-
-                   $category_name = null;//保存上一次的类名
-
-                   $use_greater_than = '>';//使用拼接符号
 
                    foreach ($already as $cate)
                    {
@@ -195,10 +192,12 @@ class ActiveRepository
                        {
                            $category_already[] = $category_name;
                        }else{
+                           $cid = $category_id[$category_name];
+                           $path = empty($path) ? $cid : $path.'-'.$cid;
                            continue;
                        }
 
-                        $cate_arr = ['title'=>$cate,ModelConfig::$time => $item[ModelConfig::$time]];
+                        $cate_arr = ['title'=>$cate, ModelConfig::$time => $item[ModelConfig::$time]];
                         $selfClass = MaCategory::create($cate_arr);
                         if ($cid<1)
                         {
@@ -206,10 +205,11 @@ class ActiveRepository
                         }else{
                             $path =  $selfClass->path = $path . '-' .$selfClass->id;
                             $selfClass->pid = $cid;
-
                         }
 
                         $cid = $selfClass->id;
+
+                        $category_id[$category_name] = $cid;
 
                         $selfClass->save();
                    }
@@ -219,15 +219,27 @@ class ActiveRepository
                    $path = '';
                }else{
 
+                       if (!in_array($item['category'],$category_already))
+                       {
+                           $category_already[] = $item['category'];
+                       }else{
+                           continue;
+                       }
+
+                    $arr = ['title'=>$item['category'],ModelConfig::$time=>$item[ModelConfig::$time]];
+                    $cateCreate = MaCategory::create($arr);
+                    $category_id[$item['category']] = $cateCreate->id;
                }
 
             }
 
         }else{
-
+            $array_result = $this->categoryAssemble($all_category);
+            $category_already = $array_result['category_already'];
+            $category_id =  $array_result['category_id'];
         }
 
-        dd($active_arr);
+        dd($array);
         try{
             MaActive::insert($active_arr);
 
@@ -247,6 +259,40 @@ class ActiveRepository
         $fetchCurrent = MaCategory::with('active')->whereDate(ModelConfig::$time,'<=',Carbon::now()->toDateTimeString())->get();
 
         return $fetchCurrent;
+    }
+
+    //返回拼装好了分类
+    public function categoryAssemble($all_category)
+    {
+        $category_already = [];$category_id=[];
+        $collect = collect($all_category);
+        foreach ($all_category as $k => $v)
+        {
+            $path = substr_count($v['path'],'-');
+            if ($path>=1)
+            {
+                $path_id = explode('-',$v['path']);
+                $temp_name = '';
+                foreach ($path_id as $item)
+                {
+                    $title = $collect->where('id',$item)->first();
+
+                    if (empty($temp_name))
+                    {
+                        $temp_name = $title['title'];
+                    }else{
+                        $temp_name .= '>'. $title['title'];
+                    }
+                }
+                $category_already[] = $temp_name;
+                $category_id[$temp_name] = $v['id'];
+            }else{
+                $category_already[] = $v['title'];
+                $category_id[$v['title']] = $v['id'];
+            }
+        }
+
+        return ['category_already'=>$category_already, 'category_id'=>$category_id];
     }
 
     public function array_only(array $arr)
