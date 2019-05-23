@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use mysql_xdevapi\Exception;
+use function PHPSTORM_META\type;
 
 
 class ActiveRepository
@@ -30,9 +31,12 @@ class ActiveRepository
     public function save(array $data=[])
     {
 
-           $res = ['status'=>2 ,'msg' => 'successfully'];
-            $data = Storage::disk('local')->get('data.txt');
+            $res = ['status'=>2 ,'msg' => 'successfully'];
+            $data = Storage::disk('local')->get('test3.txt');
+
+
             $arr = json_decode(base64_decode($data),true);
+
  /*           foreach ($arr as $value)
            {
               // $res = $this->batchInsert($value);
@@ -157,7 +161,7 @@ class ActiveRepository
 
         //从数据库获取所有的分类
         $all_category = MaCategory::all()->toArray();
-        $dare = date('H:i:s');
+
         if (empty($all_category))
         {
             $array = ModelConfig::unique_multidim_array($array,'category');
@@ -171,20 +175,38 @@ class ActiveRepository
 
                    $cid = 0;
 
+                   $path = '';
+
+                   $category_name = null;//保存上一次的类名
+
+                   $use_greater_than = '>';//使用拼接符号
+
                    foreach ($already as $cate)
                    {
+
+                       if (!is_null($category_name))
+                       {
+                           $category_name .= $use_greater_than.$cate;
+                       }else{
+                           $category_name = $cate;
+                       }
+
+                       if (!in_array($category_name,$category_already))
+                       {
+                           $category_already[] = $category_name;
+                       }else{
+                           continue;
+                       }
+
                         $cate_arr = ['title'=>$cate,ModelConfig::$time => $item[ModelConfig::$time]];
                         $selfClass = MaCategory::create($cate_arr);
-                        if (!in_array($cate,$category_already))
-                        {
-                            $category_already[] = $cate;
-                        }
                         if ($cid<1)
                         {
-                            $selfClass->path = $selfClass->id;
+                            $path = $selfClass->path = $selfClass->id;
                         }else{
-                            $selfClass->path = $cid . '-' .$selfClass->id;
+                            $path =  $selfClass->path = $path . '-' .$selfClass->id;
                             $selfClass->pid = $cid;
+
                         }
 
                         $cid = $selfClass->id;
@@ -193,7 +215,8 @@ class ActiveRepository
                    }
                    $item['cid'] = $cid;
                    $active_arr[] = $item;
-
+                   $cid =0;
+                   $path = '';
                }else{
 
                }
@@ -203,7 +226,7 @@ class ActiveRepository
         }else{
 
         }
-        $active_arr[] = ['start_date' => $dare, 'end_date'=> date('H:i:s')];
+
         dd($active_arr);
         try{
             MaActive::insert($active_arr);

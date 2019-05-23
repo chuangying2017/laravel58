@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Caiji;
 use App\Repository\Active\ActiveRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class IndexController extends Controller
 {
@@ -20,10 +21,13 @@ class IndexController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function index()
     {
-        return view('active.active',['data' => $this->activeRepository->select()]);
+        $file=Storage::disk('local')->get('test1.txt');
+        dd(base64_decode($file['data']));
+       # return view('active.active',['data' => $this->activeRepository->select()]);
     }
 
     /**
