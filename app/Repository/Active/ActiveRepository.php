@@ -27,17 +27,18 @@ class ActiveRepository
     /**
      * @param $data array
      * @return array
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function save(array $data=[])
+    public function save(array $data=[]):array
     {
-
-            $res = ['status'=>2 ,'msg' => 'successfully'];
             $data = Storage::disk('local')->get('data_test.txt');
 
 
             $arr = json_decode(base64_decode($data),true);
 
-            $res = $this->batchInsert($arr);
+            $ult = ModelConfig::unique_multidim_array($arr,'category');
+
+            $res = $this->batchInsert($ult);
 
             return $res;
     }
@@ -158,92 +159,20 @@ class ActiveRepository
         //从数据库获取所有的分类
         $all_category = MaCategory::all()->toArray();
 
-        $array = ModelConfig::unique_multidim_array($array,'category');
-
         if (empty($all_category))
         {
-
-            foreach ($array as $k => $item) {
-
-                $cid = 0;
-
-                $path = '';
-
-                $category_name = null;//保存上一次的类名
-
-                $use_greater_than = '>';//使用拼接符号
-
-               if (strpos($item['category'],'>') !== false)
-               {
-                    //组合已经有>符号
-                   $already = explode('>', $item['category']);
-
-                   foreach ($already as $cate)
-                   {
-
-                       if (!is_null($category_name))
-                       {
-                           $category_name .= $use_greater_than.$cate;
-                       }else{
-                           $category_name = $cate;
-                       }
-
-                       if (!in_array($category_name,$category_already))
-                       {
-                           $category_already[] = $category_name;
-                       }else{
-                           $cid = $category_id[$category_name];
-                           $path = empty($path) ? $cid : $path.'-'.$cid;
-                           continue;
-                       }
-
-                        $cate_arr = ['title'=>$cate, ModelConfig::$time => $item[ModelConfig::$time]];
-                        $selfClass = MaCategory::create($cate_arr);
-                        if ($cid<1)
-                        {
-                            $path = $selfClass->path = $selfClass->id;
-                        }else{
-                            $path =  $selfClass->path = $path . '-' .$selfClass->id;
-                            $selfClass->pid = $cid;
-                        }
-
-                        $cid = $selfClass->id;
-
-                        $category_id[$category_name] = $cid;
-
-                        $selfClass->save();
-                   }
-                   $item['cid'] = $cid;
-                   $active_arr[] = $item;
-                   $cid =0;
-                   $path = '';
-               }else{
-
-                       if (!in_array($item['category'],$category_already))
-                       {
-                           $category_already[] = $item['category'];
-                       }else{
-                           continue;
-                       }
-
-                    $arr = ['title'=>$item['category'],ModelConfig::$time=>$item[ModelConfig::$time]];
-                    $cateCreate = MaCategory::create($arr);
-                    $category_id[$item['category']] = $cateCreate->id;
-               }
-
-            }
-
+            $active_arr = $this->assignArray($array,$category_already,$category_id);
         }else{
             $array_result = $this->categoryAssemble($all_category);
             $category_already = $array_result['category_already'];
             $category_id =  $array_result['category_id'];
+            $active_arr = $this->assignArray($array,$category_already,$category_id);
         }
 
-        dd($array);
         try{
             MaActive::insert($active_arr);
 
-            $result = ['status'=> 'success'];
+            $result = ['status'=> 'success', 'msg'=> 'ok'];
 
         }catch (Exception $exception)
         {
@@ -293,6 +222,85 @@ class ActiveRepository
         }
 
         return ['category_already'=>$category_already, 'category_id'=>$category_id];
+    }
+
+    //重新组装数组数据
+    public function assignArray($array,$category_already,$category_id)
+    {
+        $active_arr = [];
+
+        foreach ($array as $k => $item) {
+
+            $cid = 0;
+
+            $path = '';
+
+            $category_name = null;//保存上一次的类名
+
+            $use_greater_than = '>';//使用拼接符号
+
+            if (strpos($item['category'],'>') !== false)
+            {
+                //组合已经有>符号
+                $already = explode('>', $item['category']);
+
+                foreach ($already as $cate)
+                {
+
+                    if (!is_null($category_name))
+                    {
+                        $category_name .= $use_greater_than.$cate;
+                    }else{
+                        $category_name = $cate;
+                    }
+
+                    if (!in_array($category_name,$category_already))
+                    {
+                        $category_already[] = $category_name;
+                    }else{
+                        $cid = $category_id[$category_name];
+                        $path = empty($path) ? $cid : $path.'-'.$cid;
+                        continue;
+                    }
+
+                    $cate_arr = ['title'=>$cate, ModelConfig::$time => $item[ModelConfig::$time]];
+                    $selfClass = MaCategory::create($cate_arr);
+                    if ($cid<1)
+                    {
+                        $path = $selfClass->path = $selfClass->id;
+                    }else{
+                        $path =  $selfClass->path = $path . '-' .$selfClass->id;
+                        $selfClass->pid = $cid;
+                    }
+
+                    $cid = $selfClass->id;
+
+                    $category_id[$category_name] = $cid;
+
+                    $selfClass->save();
+                }
+                $item['cid'] = $cid;
+                $active_arr[] = $item;
+                $cid =0;
+                $path = '';
+            }else{
+
+                if (!in_array($item['category'],$category_already))
+                {
+                    $category_already[] = $item['category'];
+                }else{
+                    continue;
+                }
+
+                $arr = ['title'=>$item['category'],ModelConfig::$time=>$item[ModelConfig::$time]];
+                $cateCreate = MaCategory::create($arr);
+                $category_id[$item['category']] = $cateCreate->id;
+                $active_arr['cid'] = $cateCreate->id;
+            }
+
+        }
+
+        return $active_arr;
     }
 
     public function array_only(array $arr)
