@@ -280,7 +280,7 @@ class ActiveRepository
                     $selfClass->save();
                 }
                 $item['cid'] = $cid;
-                $item['category_name'] = $item['category'];
+                $item['category_name'] = end($already);
                 $active_arr[] = $item;
                 $cid =0;
                 $path = '';
