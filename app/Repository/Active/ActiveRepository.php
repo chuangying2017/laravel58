@@ -198,7 +198,9 @@ class ActiveRepository
 
     public function select()
     {
-        $fetchCurrent = MaCategory::with('active')->whereDate(ModelConfig::$time,'<=',Carbon::now()->toDateTimeString())->get();
+        $fetchCurrent = MaCategory::has('active')->where(ModelConfig::$time,'<=',time())->get();
+
+        $fetchCurrent->load('active');
 
         return $fetchCurrent;
     }

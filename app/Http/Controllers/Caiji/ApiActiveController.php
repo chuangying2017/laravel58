@@ -28,7 +28,7 @@ class ApiActiveController extends Controller
 
     public function test()
     {
-        $res = $this->activeRepository->save();
+        $res = $this->activeRepository->select();
         dd($res);
     }
 }
