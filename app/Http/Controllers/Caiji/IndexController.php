@@ -21,11 +21,10 @@ class IndexController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function index()
     {
-        return view('active.active',['data' => $this->activeRepository->select()]);
+       return view('active.active',['data' => $this->activeRepository->select()]);
     }
 
     /**

@@ -33,10 +33,17 @@
             <a href="index.html" title="首页">首页</a>
         </div>
         <ul class="nav navbar-nav navbar-left" id="jsddm">
-            <li class="nav-news js-show-menu"><a href="list.html" target="_blank">心情随笔</a></li>
+            <li class="nav-news">
+                <a href="list.html" target="_blank">视频教程</a>
+            </li>
+{{--            <li class="nav-news js-show-menu"><a href="list.html" target="_blank">心情随笔</a></li>
             <li class="nav-news"><a href="list.html" target="_blank">技术文章分享<span class="nums-prompt nums-prompt-topic"></span></a></li>
             <li class="nav-news"><a href="list.html" target="_blank">视频教程</a></li>
-            <li class="nav-news"><a href="list.html" target="_blank">网页博客模版下载<span class="nums-prompt"></span></a></li>
+            <li class="nav-news"><a href="list.html" target="_blank">网页博客模版下载<span class="nums-prompt"></span></a></li>--}}
+    {{--        @foreach($data as $value)
+                <li class="nav-news"><a href="#" target="_blank">{{$value->title}}</a></li>
+            @endforeach--}}
+
         </ul>
    {{--     <div class="input-group souIn">
             <input type="text" class="form-control input-group" >
