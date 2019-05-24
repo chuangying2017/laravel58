@@ -9,13 +9,11 @@ use App\Model\Active\MaActive;
 use App\Model\Active\MaCategory;
 use App\Model\ModelConfig;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use mysql_xdevapi\Exception;
-use function PHPSTORM_META\type;
+
 
 
 class ActiveRepository
@@ -31,8 +29,7 @@ class ActiveRepository
      */
     public function save(array $data=[]):array
     {
-            $data = Storage::disk('local')->get('data.txt');
-
+            $data = Storage::disk('local')->get('data_test.txt');
 
             $arr = json_decode(base64_decode($data),true);
 
@@ -163,7 +160,7 @@ class ActiveRepository
         {
             $active_arr = $this->assignArray($array,$category_already,$category_id);
         }else{
-            $array_result = $this->categoryAssemble($all_category);
+            $array_result = $this->dataAssemble($all_category);
             $category_already = $array_result['category_already'];
             $category_id =  $array_result['category_id'];
             $active_arr = $this->assignArray($array,$category_already,$category_id);
@@ -189,7 +186,11 @@ class ActiveRepository
 
         return $fetchCurrent;
     }
-
+    //获取不同的分类数组
+    public function dataAssemble($all_category): array
+    {
+       return ['category_id'=>array_column($all_category,'id','path_name'), 'category_already' => array_column($all_category,'path_name')];
+    }
     //返回拼装好了分类
     public function categoryAssemble($all_category)
     {
@@ -263,7 +264,7 @@ class ActiveRepository
                         continue;
                     }
 
-                    $cate_arr = ['title'=>$cate, ModelConfig::$time => $item[ModelConfig::$time]];
+                    $cate_arr = ['title'=>$cate, ModelConfig::$time => $item[ModelConfig::$time], 'path_name'=>$category_name];
                     $selfClass = MaCategory::create($cate_arr);
                     if ($cid<1)
                     {
@@ -293,7 +294,7 @@ class ActiveRepository
                     continue;
                 }
 
-                $arr = ['title'=>$item['category'],ModelConfig::$time=>$item[ModelConfig::$time]];
+                $arr = ['title'=>$item['category'],ModelConfig::$time=>$item[ModelConfig::$time],'path_name'=>$item['category']];
                 $cateCreate = MaCategory::create($arr);
                 $category_id[$item['category']] = $cateCreate->id;
                 $item['cid'] = $cateCreate->id;

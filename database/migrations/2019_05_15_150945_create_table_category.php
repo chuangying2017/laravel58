@@ -18,6 +18,7 @@ class CreateTableCategory extends Migration
             $table->string('title',100)->comment('分类名称');
             $table->integer('pid')->default(0)->comment('分类等级');
             $table->string('path')->default(0)->comment('分类路径');
+            $table->string('path_name')->comment('路径-名称');
             $table->bigInteger('createTime')->comment('创建时间');
         });
     }
