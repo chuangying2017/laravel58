@@ -27,6 +27,18 @@ class IndexController extends Controller
        return view('active.active',['data' => $this->activeRepository->select()]);
     }
 
+    //文章内容
+    public function content(Request $request)
+    {
+        return view('active.index', $this->activeRepository->select_category($request->get('pid',0)));
+    }
+
+    //文章详情
+    public function detail()
+    {
+        return view('active.detail');
+    }
+
     /**
      * Show the form for creating a new resource.
      *

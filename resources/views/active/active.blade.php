@@ -21,7 +21,7 @@
 
     <script language="javascript" type="text/javascript" src="{{asset('static/active/js/jquery-1.11.1.min.js')}}"></script>
     <script language="javascript" type="text/javascript" src="{{asset('static/active/js/main.js')}}"></script>
-    <script language="javascript" type="text/javascript" src="{{asset('static/active/js/popwin.js')}}"></script>
+
 
 </head>
 
@@ -36,7 +36,7 @@
             <li class="nav-news">
                 <a href="list.html" target="_blank">视频教程</a>
             </li>
-{{--            <li class="nav-news js-show-menu"><a href="list.html" target="_blank">心情随笔</a></li>
+    {{--            <li class="nav-news js-show-menu"><a href="list.html" target="_blank">心情随笔</a></li>
             <li class="nav-news"><a href="list.html" target="_blank">技术文章分享<span class="nums-prompt nums-prompt-topic"></span></a></li>
             <li class="nav-news"><a href="list.html" target="_blank">视频教程</a></li>
             <li class="nav-news"><a href="list.html" target="_blank">网页博客模版下载<span class="nums-prompt"></span></a></li>--}}

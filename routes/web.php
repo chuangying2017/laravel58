@@ -18,6 +18,10 @@ Route::get('/', function () {
 Route::group(['namespace'=>'Caiji'],function (){
     Route::get('active','IndexController@index');
 
+    Route::get('content', 'IndexController@content')->name('active.content');
+
+    Route::get('content/detail', 'IndexController@detail')->name('content.detail');
+
     Route::post('active/insert','ApiActiveController@insert');
 
     Route::get('test', 'ApiActiveController@test');

@@ -12,8 +12,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use mysql_xdevapi\Collection;
 use mysql_xdevapi\Exception;
-
+use phpDocumentor\Reflection\Types\Object_;
 
 
 class ActiveRepository
@@ -29,9 +30,11 @@ class ActiveRepository
      */
     public function save(array $data=[]):array
     {
-            $data = Storage::disk('local')->get('data.txt');
+            if (empty($arrData=$data['data'])){
+                return ['status'=>'fail', 'msg'=>'data is not null'];
+            }
 
-            $arr = json_decode(base64_decode($data),true);
+            $arr = json_decode(base64_decode($arrData),true);
 
             $ult = ModelConfig::unique_multidim_array($arr,'category');
 
@@ -195,7 +198,7 @@ class ActiveRepository
         return $result;
     }
 
-
+    //查询所有的分类
     public function select()
     {
         $fetchCurrent = MaCategory::has('active')->where(ModelConfig::$time,'<=',time())->get();
@@ -204,11 +207,13 @@ class ActiveRepository
 
         return $fetchCurrent;
     }
+
     //获取不同的分类数组
     public function dataAssemble($all_category): array
     {
        return ['category_id'=>array_column($all_category,'id','path_name'), 'category_already' => array_column($all_category,'path_name')];
     }
+
     //返回拼装好了分类
     public function categoryAssemble($all_category)
     {
@@ -325,6 +330,7 @@ class ActiveRepository
         return $active_arr;
     }
 
+    //array过滤 传入要保留的key
     public function array_only(array $arr)
     {
         return Arr::only($arr, [
@@ -334,5 +340,20 @@ class ActiveRepository
             'content',
             'description'
         ]);
+    }
+
+    /**
+     * @param int $pid
+     * @param string $load ->default('active');
+     * @return array
+     */
+    public function select_category(int $pid = 0, $load = 'active')
+    {
+
+            $model = MaCategory::query()->with($load);
+
+            $result = $model->where('pid','=',$pid)->get();
+
+            return ['content'=>$result];
     }
 }
