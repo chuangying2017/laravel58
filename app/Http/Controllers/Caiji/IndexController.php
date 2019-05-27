@@ -24,7 +24,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-       return view('active.active',['data' => $this->activeRepository->select()]);
+       return view('active.active');
     }
 
     //文章内容
