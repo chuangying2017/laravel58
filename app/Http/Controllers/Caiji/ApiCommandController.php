@@ -16,7 +16,7 @@ class ApiCommandController extends Controller
 
     public function pullGithub()
     {
-        $github_signa = $_SERVER['HTTP_X_HUB_SIGNATURE'];//fbneinfie
+        $github_signa = $_SERVER['HTTP_X_HUB_SIGNATURE'];//继续测试通道
         list($hash_type, $hash_value) = explode('=', $github_signa, 2);
         $payload = file_get_contents("php://input");
         Storage::disk('local')->put('githubTest.log',serialize($payload));
