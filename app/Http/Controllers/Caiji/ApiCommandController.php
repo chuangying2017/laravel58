@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Caiji;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class ApiCommandController extends Controller
 {
@@ -18,6 +19,7 @@ class ApiCommandController extends Controller
         $github_signa = $_SERVER['HTTP_X_HUB_SIGNATURE'];
         list($hash_type, $hash_value) = explode('=', $github_signa, 2);
         $payload = file_get_contents("php://input");
+        Storage::disk('local')->put('githubTest.log',json_encode($payload));
         $secret = 'xiaoma1212';
         $hash = hash_hmac($hash_type,$payload,$secret);
         if($hash && $hash === $hash_value)
