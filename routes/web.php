@@ -25,4 +25,6 @@ Route::group(['namespace'=>'Caiji'],function (){
     Route::post('active/insert','ApiActiveController@insert');
 
     Route::get('test', 'ApiActiveController@test');
+
+    Route::post('push/welcome', 'ApiCommandController@pullGithub');
 });
