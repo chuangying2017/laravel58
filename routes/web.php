@@ -11,14 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-        return view('welcome');
-});
-
 Route::group(['namespace'=>'Caiji'],function (){
     Route::get('active','IndexController@index');
 
-    Route::get('content', 'IndexController@content')->name('active.content');
+    Route::get('/', 'IndexController@content')->name('active.content');
 
     Route::get('content/detail', 'IndexController@detail')->name('content.detail');
 
