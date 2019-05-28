@@ -16,5 +16,5 @@
     <script src="{{asset('static/content/js/jquery-2.1.4.min.js')}}"></script>
     <script src="{{asset('static/content/js/nprogress.js')}}"></script>
     <script src="{{asset('static/content/js/jquery.lazyload.min.js')}}"></script>
-<!--[if gte IE 9]> -->
+<!-- [if gte IE 9]> -->
 

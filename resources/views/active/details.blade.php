@@ -1,17 +1,7 @@
 @include('public.header')
-    <script>window.location.href='upgrade-browser.html';</script>
-    <![endif]-->
     <title>用DTcms</title>
     <link rel="shortcut icon" href="http://www.muzhuangnet.com/favicon.ico">
-    <script>
-        var _hmt = _hmt || [];
-        (function() {
-            var hm = document.createElement("script");
-            hm.src = "//hm.baidu.com/hm.js?03c61d76c52987c77447b08d61c765d3";
-            var s = document.getElementsByTagName("script")[0];
-            s.parentNode.insertBefore(hm, s);
-        })();
-    </script>
+
     <script>
         (function(){
             var bp = document.createElement('script');
@@ -32,61 +22,7 @@
     <script type="text/javascript" charset="utf-8" href="{{asset('static/content/js/jquery.cookie.js')}}"></script>
 </head>
 <body class="user-select single">
-<header class="header">
-    <nav class="navbar navbar-default" id="navbar">
-        <div class="container">
-            <div class="header-topbar hidden-xs link-border">
-                <ul class="site-nav topmenu">
-                    <li><a href="http://www.muzhuangnet.com/tags/">标签云</a></li>
-                    <li><a href="http://www.muzhuangnet.com/bookmark/" rel="nofollow">书签</a></li>
-                    <li><a href="http://www.muzhuangnet.com/readers/" rel="nofollow">读者墙</a></li>
-                    <li><a href="http://www.muzhuangnet.com/rss.html" title="RSS订阅" rel="nofollow"><i class="fa fa-rss">
-                            </i> RSS订阅</a></li>
-                </ul>
-                <a href="javascript:;" class="register">勤记录 懂分享</a></div>
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar" aria-expanded="false"> <span class="sr-only"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                <h1 class="logo hvr-bounce-in"><a href="http://www.muzhuangnet.com" title="木庄网络博客">
-                        <img href="{{asset('static/content/picture/201610171329086541.png')}}" alt="木庄网络博客" /></a></h1>
-            </div>
-
-            <div class="collapse navbar-collapse" id="header-navbar" name="mznetblog">
-                <form class="navbar-form visible-xs">
-                    <div class="input-group">
-                        <input type="text" class="form-control" onkeydown="if (event.keyCode == 13) {SiteSearch('http://www.muzhuangnet.com/search.html', '#keyword');return false};"
-                               size="35" placeholder="请输入关键字" id="keyword" name="keyword" maxlength="15" autocomplete="off" />
-                        <span class="input-group-btn">
-        <input type="button" value="搜索" onclick="SiteSearch('http://www.muzhuangnet.com/search.html', '#keyword');"
-               class="btn btn-default btn-search">
-    </span>
-                    </div>
-
-                </form>
-                <ul class="nav navbar-nav navbar-right">
-                    <li id="index"><a data-cont="木庄网络博客" title="木庄网络博客" href="http://www.muzhuangnet.com">
-                            首页</a></li>
-
-                    <li id="mznetblog"><a data-cont="MZBlog开源博客" title="MZBlog开源博客"
-                                          href="http://www.muzhuangnet.com/list/mznetblog/">MZBlog开源博客</a></li>
-
-                    <li id="code"><a data-cont="IT技术笔记" title="IT技术笔记"
-                                     href="http://www.muzhuangnet.com/list/code/">IT技术笔记</a></li>
-
-                    <li id="news"><a data-cont="资讯分享" title="资讯分享"
-                                     href="http://www.muzhuangnet.com/list/news/">资讯分享</a></li>
-
-                    <script type="text/javascript">
-                        $(function () {
-                            var flag = $("#header-navbar").attr("name");
-                            $("#" + flag).addClass("active");
-                        })
-                    </script>
-
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
+@include('public.head')
 <section class="container">
     <div class="content-wrap">
         <div class="content">

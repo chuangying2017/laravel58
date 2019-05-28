@@ -34,9 +34,9 @@ class IndexController extends Controller
     }
 
     //文章详情
-    public function detail()
+    public function detail(Request $request)
     {
-        return view('active.detail');
+        return view('active.details',$this->activeRepository->select_category($request->get('pid',0)));
     }
 
     /**
