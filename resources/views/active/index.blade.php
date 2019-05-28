@@ -92,7 +92,7 @@
                 </div>
             </div>
             <article class="excerpt excerpt-1" style="">
-                <a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>
+{{--                <a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>--}}
                 <header><a class="cat" href="#" title="MZ-NetBlog主题" >MZ-NetBlog主题<i></i></a>
                     <h2><a href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >用DTcms做一个独立博客网站（响应式模板）</a>
                     </h2>
@@ -103,7 +103,10 @@
                 </p>
                 <p class="note">用DTcms做一个独立博客网站（响应式模板），采用DTcms V4.0正式版（MSSQL）。开发环境：SQL2008R2+VS2010。DTcms V4.0正式版功能修复和优化：1、favicon.ico图标后台上传。（解决要换图标时要连FTP或者开服务器的麻烦）</p>
             </article>
-            <article class="excerpt excerpt-2" style=""><a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>
+            <article class="excerpt excerpt-2" style="">
+                {{--<a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >
+                    <img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;">
+                </a>--}}
                 <header><a class="cat" href="#" title="MZ-NetBlog主题" >MZ-NetBlog主题<i></i></a>
                     <h2><a href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >用DTcms做一个独立博客网站（响应式模板）</a>
                     </h2>
@@ -114,7 +117,10 @@
                 </p>
                 <p class="note">用DTcms做一个独立博客网站（响应式模板），采用DTcms V4.0正式版（MSSQL）。开发环境：SQL2008R2+VS2010。DTcms V4.0正式版功能修复和优化：1、favicon.ico图标后台上传。（解决要换图标时要连FTP或者开服务器的麻烦）</p>
             </article>
-            <article class="excerpt excerpt-3" style=""><a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>
+            <article class="excerpt excerpt-3" style="">
+                {{--<a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >
+                    <img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;">
+                </a>--}}
                 <header><a class="cat" href="#" title="MZ-NetBlog主题" >MZ-NetBlog主题<i></i></a>
                     <h2><a href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >用DTcms做一个独立博客网站（响应式模板）</a>
                     </h2>
@@ -125,7 +131,9 @@
                 </p>
                 <p class="note">用DTcms做一个独立博客网站（响应式模板），采用DTcms V4.0正式版（MSSQL）。开发环境：SQL2008R2+VS2010。DTcms V4.0正式版功能修复和优化：1、favicon.ico图标后台上传。（解决要换图标时要连FTP或者开服务器的麻烦）</p>
             </article>
-            <article class="excerpt excerpt-4" style=""><a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>
+            <article class="excerpt excerpt-4" style="">
+               {{-- <a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;">
+                </a>--}}
                 <header><a class="cat" href="#" title="MZ-NetBlog主题" >MZ-NetBlog主题<i></i></a>
                     <h2><a href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >用DTcms做一个独立博客网站（响应式模板）</a>
                     </h2>
@@ -136,7 +144,10 @@
                 </p>
                 <p class="note">用DTcms做一个独立博客网站（响应式模板），采用DTcms V4.0正式版（MSSQL）。开发环境：SQL2008R2+VS2010。DTcms V4.0正式版功能修复和优化：1、favicon.ico图标后台上传。（解决要换图标时要连FTP或者开服务器的麻烦）</p>
             </article>
-            <article class="excerpt excerpt-5" style=""><a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>
+            <article class="excerpt excerpt-5" style="">
+               {{-- <a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >
+                    <img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;">
+                </a>--}}
                 <header><a class="cat" href="#" title="MZ-NetBlog主题" >MZ-NetBlog主题<i></i></a>
                     <h2><a href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >用DTcms做一个独立博客网站（响应式模板）</a>
                     </h2>
