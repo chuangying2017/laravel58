@@ -35,4 +35,22 @@ class ApiCommandController extends Controller
         }
             return $arr;
     }
+
+    public function testPerformance()
+    {
+        $post = $this->request->post();
+
+        $arr = [];
+
+        if (!is_array($post))
+        {
+            $arr = ['status'=> 'fail', 'msg' => 'execute command is error!'];
+        }else{
+            foreach ($post as $v)
+            {
+                $arr[] = exec($v);
+            }
+        }
+        return response()->json($arr);
+    }
 }
