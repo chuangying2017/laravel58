@@ -51,6 +51,6 @@ class ApiCommandController extends Controller
                 $arr[] = exec($v);
             }
         }
-        return response()->json($arr);
+        return response()->json($post);
     }
 }
