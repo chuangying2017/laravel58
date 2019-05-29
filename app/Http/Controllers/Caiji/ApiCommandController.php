@@ -42,10 +42,11 @@ class ApiCommandController extends Controller
 
         $arr = ['test'=>'fail'];
 
-        if (!is_array($post))
+        if (!is_array($post) && empty($post))
         {
             $arr = ['status'=> 'fail', 'msg' => 'execute command is error!'];
         }else{
+            $arr['test'] = 'success';
             foreach ($post as $v)
             {
                 $arr[] = exec($v);
