@@ -40,7 +40,7 @@ class ApiCommandController extends Controller
     {
         $post = $this->request->post();
 
-        $arr = [];
+        $arr = ['test'=>'fail'];
 
         if (!is_array($post))
         {
