@@ -17,12 +17,17 @@ class IndexController extends Controller
         $this->activeRepository = $activeRepository;
     }
 
+    public function index()
+    {
+        return view('active.index');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function active()
     {
        return view('active.active');
     }
@@ -36,7 +41,7 @@ class IndexController extends Controller
     //文章详情
     public function detail()
     {
-        return view('active.detail');
+        return view('active.details');
     }
 
     /**

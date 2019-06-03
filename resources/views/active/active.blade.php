@@ -29,9 +29,9 @@
 
 <header id="top" role="banner" class="transition">
     <div class="container">
-        <div class="navbar-header transition">
+      {{--  <div class="navbar-header transition">
             <a href="index.html" title="首页">首页</a>
-        </div>
+        </div>--}}
         <ul class="nav navbar-nav navbar-left" id="jsddm">
             <li class="nav-news">
                 <a href="list.html" target="_blank">视频教程</a>

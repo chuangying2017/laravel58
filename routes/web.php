@@ -16,7 +16,9 @@ Route::get('/', function () {
 });
 
 Route::group(['namespace'=>'Caiji'],function (){
-    Route::get('active','IndexController@index');
+    Route::get('active','IndexController@active');
+
+    Route::get('index', 'IndexController@index');
 
     Route::get('content', 'IndexController@content')->name('active.content');
 
@@ -27,4 +29,9 @@ Route::group(['namespace'=>'Caiji'],function (){
     Route::get('test', 'ApiActiveController@test');
 
     Route::post('push/welcome', 'ApiCommandController@pullGithub');
+});
+
+
+Route::group(['namespace' => 'Chat', 'prefix' => 'chat'], function(){
+    Route::get('index', 'IndexController@index')->name('chat.index');
 });
