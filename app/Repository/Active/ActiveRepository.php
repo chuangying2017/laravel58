@@ -354,6 +354,10 @@ class ActiveRepository
 
             $result = $model->where('pid','=',$pid)->get();
 
-            return ['content'=>$result];
+            $active = $result->mapWithKeys(function ($item){
+                    return $item['active'];
+            });
+
+            return ['content'=>$result,'active' => $active];
     }
 }

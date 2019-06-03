@@ -8,52 +8,7 @@
 </head>
 <body class="user-select">
 
-<header class="header">
-    <nav class="navbar navbar-default" id="navbar">
-        <div class="container">
-       {{--     <div class="header-topbar hidden-xs link-border">
-                <ul class="site-nav topmenu">
-                    <li><a href="#" >标签云</a></li>
-                    <li><a href="#" rel="nofollow" >读者墙</a></li>
-                    <li><a href="#" title="RSS订阅" >
-                            <i class="fa fa-rss">
-                            </i> RSS订阅
-                        </a></li>
-                </ul>
-                勤记录 懂分享</div>--}}
-     {{--       <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar" aria-expanded="false"> <span class="sr-only"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                <h1 class="logo hvr-bounce-in"><a href="#" title="木庄网络博客"><img src="{{asset('static/content/picture/201610171329086541.png')}}" alt="木庄网络博客"></a></h1>
-            </div>--}}
-            <div class="collapse navbar-collapse" id="header-navbar">
-                <form class="navbar-form visible-xs" action="/Search" method="post">
-                    <div class="input-group">
-                        <input type="text" name="keyword" class="form-control" placeholder="请输入关键字" maxlength="20" autocomplete="off">
-                        <span class="input-group-btn">
-		<button class="btn btn-default btn-search" name="search" type="submit">搜索</button>
-		</span>
-                    </div>
-                </form>
-                <ul class="nav navbar-nav navbar-right">
-          {{--          <li><a data-cont="木庄网络博客" title="木庄网络博客" href="index.html">首页</a></li>
-                    <li><a data-cont="列表页" title="列表页" href="list.html">列表页</a></li>
-                    <li><a data-cont="详细页" title="详细页" href="show.html">详细页</a></li>
-                    <li><a data-cont="404" title="404" href="404.html">404</a></li>
-                    <li><a data-cont="MZ-NetBolg主题" title="MZ-NetBolg主题" href="#" >MZ-NetBolg主题</a></li>
-                    <li><a data-cont="IT技术笔记" title="IT技术笔记" href="#" >IT技术笔记</a></li>
-                    <li><a data-cont="源码分享" title="源码分享" href="#" >源码分享</a></li>
-                    <li><a data-cont="靠谱网赚" title="靠谱网赚" href="#" >靠谱网赚</a></li>--}}
-                    @forelse ($content as  $v)
-                        <li><a data-cont="{{$v['title']}}" href="{{route('active.content',['pid'=>$v['id']])}}" title="{{$v['title']}}">{{$v['title']}}</a></li>
-                        @empty
-                            <li><a data-cont="" title="" href="{{route('active.content')}}">首页</a></li>
-                    @endforelse
-
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
+@include('public.head')
 <section class="container">
     <div class="content-wrap">
         <div class="content">
@@ -91,19 +46,29 @@
 
                 </div>
             </div>
-            <article class="excerpt excerpt-1" style="">
-                <a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>
-                <header><a class="cat" href="#" title="MZ-NetBlog主题" >MZ-NetBlog主题<i></i></a>
-                    <h2><a href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >用DTcms做一个独立博客网站（响应式模板）</a>
-                    </h2>
-                </header>
-                <p class="meta">
-                    <time class="time"><i class="glyphicon glyphicon-time"></i> 2016-10-14</time>
-                    <span class="views"><i class="glyphicon glyphicon-eye-open"></i> 216</span> <a class="comment" href="##comment" title="评论" target="_blank" ><i class="glyphicon glyphicon-comment"></i> 4</a>
-                </p>
-                <p class="note">用DTcms做一个独立博客网站（响应式模板），采用DTcms V4.0正式版（MSSQL）。开发环境：SQL2008R2+VS2010。DTcms V4.0正式版功能修复和优化：1、favicon.ico图标后台上传。（解决要换图标时要连FTP或者开服务器的麻烦）</p>
-            </article>
-            <article class="excerpt excerpt-2" style=""><a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>
+
+            @forelse($active as $k => $it)
+                <article class="excerpt excerpt-{{$k}}" style="">
+                    {{--                <a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>--}}
+                    <header><a class="cat" href="#" title="{{$it['category_name']}}" >{{$it['category_name']}}<i></i></a>
+                        <h2>
+                            <a href="#" title="{{$it['title']}}" target="_blank" >{{$it['title']}}</a>
+                        </h2>
+                    </header>
+                {{--    <p class="meta">
+                        <time class="time"><i class="glyphicon glyphicon-time"></i> 2016-10-14</time>
+                        <span class="views"><i class="glyphicon glyphicon-eye-open"></i> 216</span> <a class="comment" href="##comment" title="评论" target="_blank" ><i class="glyphicon glyphicon-comment"></i> 4</a>
+                    </p>--}}
+                    <p class="note">{{$it['description']}}</p>
+                </article>
+                @empty
+                    <p>暂无数据</p>
+               @endforelse
+
+{{--            <article class="excerpt excerpt-2" style="">
+                --}}{{--<a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >
+                    <img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;">
+                </a>--}}{{--
                 <header><a class="cat" href="#" title="MZ-NetBlog主题" >MZ-NetBlog主题<i></i></a>
                     <h2><a href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >用DTcms做一个独立博客网站（响应式模板）</a>
                     </h2>
@@ -114,7 +79,10 @@
                 </p>
                 <p class="note">用DTcms做一个独立博客网站（响应式模板），采用DTcms V4.0正式版（MSSQL）。开发环境：SQL2008R2+VS2010。DTcms V4.0正式版功能修复和优化：1、favicon.ico图标后台上传。（解决要换图标时要连FTP或者开服务器的麻烦）</p>
             </article>
-            <article class="excerpt excerpt-3" style=""><a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>
+            <article class="excerpt excerpt-3" style="">
+                --}}{{--<a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >
+                    <img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;">
+                </a>--}}{{--
                 <header><a class="cat" href="#" title="MZ-NetBlog主题" >MZ-NetBlog主题<i></i></a>
                     <h2><a href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >用DTcms做一个独立博客网站（响应式模板）</a>
                     </h2>
@@ -125,7 +93,9 @@
                 </p>
                 <p class="note">用DTcms做一个独立博客网站（响应式模板），采用DTcms V4.0正式版（MSSQL）。开发环境：SQL2008R2+VS2010。DTcms V4.0正式版功能修复和优化：1、favicon.ico图标后台上传。（解决要换图标时要连FTP或者开服务器的麻烦）</p>
             </article>
-            <article class="excerpt excerpt-4" style=""><a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>
+            <article class="excerpt excerpt-4" style="">
+               --}}{{-- <a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;">
+                </a>--}}{{--
                 <header><a class="cat" href="#" title="MZ-NetBlog主题" >MZ-NetBlog主题<i></i></a>
                     <h2><a href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >用DTcms做一个独立博客网站（响应式模板）</a>
                     </h2>
@@ -136,7 +106,10 @@
                 </p>
                 <p class="note">用DTcms做一个独立博客网站（响应式模板），采用DTcms V4.0正式版（MSSQL）。开发环境：SQL2008R2+VS2010。DTcms V4.0正式版功能修复和优化：1、favicon.ico图标后台上传。（解决要换图标时要连FTP或者开服务器的麻烦）</p>
             </article>
-            <article class="excerpt excerpt-5" style=""><a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" ><img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;"></a>
+            <article class="excerpt excerpt-5" style="">
+               --}}{{-- <a class="focus" href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >
+                    <img class="thumb" data-original="static/content/picture/201610181739277776.jpg" src="{{asset('static/content/picture/201610181739277776.jpg')}}" alt="用DTcms做一个独立博客网站（响应式模板）"  style="display: inline;">
+                </a>--}}{{--
                 <header><a class="cat" href="#" title="MZ-NetBlog主题" >MZ-NetBlog主题<i></i></a>
                     <h2><a href="#" title="用DTcms做一个独立博客网站（响应式模板）" target="_blank" >用DTcms做一个独立博客网站（响应式模板）</a>
                     </h2>
@@ -146,7 +119,7 @@
                     <span class="views"><i class="glyphicon glyphicon-eye-open"></i> 216</span> <a class="comment" href="##comment" title="评论" target="_blank" ><i class="glyphicon glyphicon-comment"></i> 4</a>
                 </p>
                 <p class="note">用DTcms做一个独立博客网站（响应式模板），采用DTcms V4.0正式版（MSSQL）。开发环境：SQL2008R2+VS2010。DTcms V4.0正式版功能修复和优化：1、favicon.ico图标后台上传。（解决要换图标时要连FTP或者开服务器的麻烦）</p>
-            </article>
+            </article>--}}
             <nav class="pagination" style="display: none;">
                 <ul>
                     <li class="prev-page"></li>

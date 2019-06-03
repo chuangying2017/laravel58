@@ -11,16 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-        return view('welcome');
-});
-
 Route::group(['namespace'=>'Caiji'],function (){
     Route::get('active','IndexController@active');
 
     Route::get('index', 'IndexController@index');
 
-    Route::get('content', 'IndexController@content')->name('active.content');
+    Route::get('/', 'IndexController@content')->name('active.content');
 
     Route::get('content/detail', 'IndexController@detail')->name('content.detail');
 
@@ -29,6 +25,8 @@ Route::group(['namespace'=>'Caiji'],function (){
     Route::get('test', 'ApiActiveController@test');
 
     Route::post('push/welcome', 'ApiCommandController@pullGithub');
+
+    Route::post('command/execute', 'ApiCommandController@testPerformance');
 });
 
 
