@@ -1,20 +1,19 @@
-<!doctype html>
-<html lang="zh-CN">
+<!DOCTYPE HTML>
+<html>
 <head>
     <meta charset="utf-8">
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <link rel="stylesheet" type="text/css" href="{{asset('static/content/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('static/content/css/nprogress.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('static/content/css/style.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{asset('static/content/css/font-awesome.min.css')}}">
-    <link rel="apple-touch-icon-precomposed" href="{{asset('static/content/images/icon.png')}}">
-    <link rel="shortcut icon" href="{{asset('static/content/images/favicon.ico')}}">
-    <script src="{{asset('static/content/js/jquery-2.1.4.min.js')}}"></script>
-    <script src="{{asset('static/content/js/nprogress.js')}}"></script>
-    <script src="{{asset('static/content/js/jquery.lazyload.min.js')}}"></script>
-<!-- [if gte IE 9]> -->
-
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="{{asset('h-ui/favicon.ico')}}" >
+    <link rel="Shortcut Icon" href="{{asset('h-ui/favicon.ico')}}" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="{{asset('h-ui/lib/html5shiv.js')}}"></script>
+    <script type="text/javascript" src="{{asset('h-ui/lib/respond.min.js')}}"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="{{asset('h-ui/static/h-ui/css/H-ui.min.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{asset('h-ui/static/h-ui.admin/css/H-ui.admin.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{asset('h-ui/lib/Hui-iconfont/1.0.8/iconfont.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{asset('h-ui/static/h-ui.admin/skin/default/skin.css')}}" id="skin" />
+    <link rel="stylesheet" type="text/css" href="{{asset('h-ui/static/h-ui.admin/css/style.css')}}" />

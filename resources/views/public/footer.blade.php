@@ -1,6 +1,4 @@
-<footer class="footer">
-    <div class="container">
-        <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="Templates">Templates</a> - Collect from <a href="http://www.cssmoban.com/" title="Templates" target="_blank">Templates</a></p>
-    </div>
-    <div id="gotop"><a class="gotop"></a></div>
-</footer>
+<script type="text/javascript" src="{{asset('h-ui/lib/jquery/1.9.1/jquery.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('h-ui/lib/layer/2.4/layer.js')}}"></script>
+<script type="text/javascript" src="{{asset('h-ui/static/h-ui/js/H-ui.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('h-ui/static/h-ui.admin/js/H-ui.admin.js')}}"></script>

@@ -11,7 +11,11 @@
 |
 */
 
-Route::group(['namespace'=>'Caiji'],function (){
+Route::get('/', function(){
+     return view('welcome');
+});
+
+/*Route::group(['namespace'=>'Caiji'],function (){
     Route::get('active','IndexController@active');
 
     Route::get('index', 'IndexController@index');
@@ -27,9 +31,35 @@ Route::group(['namespace'=>'Caiji'],function (){
     Route::post('push/welcome', 'ApiCommandController@pullGithub');
 
     Route::post('command/execute', 'ApiCommandController@testPerformance');
-});
+});*/
 
 
 Route::group(['namespace' => 'Chat', 'prefix' => 'chat'], function(){
     Route::get('index', 'IndexController@index')->name('chat.index');
 });
+
+Route::get('auth/login', function(){
+    return view('admin.login');
+})->name('admin.login');
+
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function(){
+    Route::get('index', 'IndexController@index')->name('admin.index');
+    Route::get('welcome', 'IndexController@welcome')->name('admin.welcome');
+    Route::get('member', 'IndexController@member_list')->name('admin.memberShow');
+    Route::get('memberAdd', 'IndexController@member_add')->name('admin.memberAdd');
+    Route::get('member_password', 'IndexController@changePassword')->name('admin.change_password');
+    Route::resource('member_logic', 'MemberController');
+    Route::post('member_logic/status', 'MemberController@statusEdit')->name('admin.member.statusEdit');
+    Route::get('chat_record', 'IndexController@chat_record')->name('admin.chat_record');
+
+  /*  Route::get('test', function (\App\Repository\Chat\Member $member)
+    {
+        dd($member->memberTest());
+    });*/
+});
+
+Auth::routes();
+
+Route::get('/home', function (){
+    return redirect('admin/index');
+})->name('home');
