@@ -18,7 +18,8 @@ class CreateTablesRecord extends Migration
             $table->integer('customer_id')->index('customer_id')->comment('关联客服id');
             $table->char('client_number')->comment('客户号');
             $table->enum('type',['msg', 'image'])->default('msg')->comment('内容类型');
-            $table->string('content',1000)->default(0)->comment('会话内容 msg or image');
+            $table->enum('mode', ['send', 'accept'])->default('send')->comment('模式发送或接收');
+            $table->text('content')->nullable()->comment('会话内容 msg or image');
             $table->timestamps();
         });
     }

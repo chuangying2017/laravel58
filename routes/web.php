@@ -52,10 +52,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function(){
     Route::post('member_logic/status', 'MemberController@statusEdit')->name('admin.member.statusEdit');
     Route::get('chat_record', 'IndexController@chat_record')->name('admin.chat_record');
 
-  /*  Route::get('test', function (\App\Repository\Chat\Member $member)
+    Route::get('test', function (\App\Repository\Chat\Member $member)
     {
         dd($member->memberTest());
-    });*/
+    });
 });
 
 Auth::routes();

@@ -22,7 +22,7 @@
 
                 <th width="80">ID</th>
                 <th width="120">客户号</th>
-
+                <th width="80">客户 发/收</th>
                 <th width="90">客服号</th>
                 <th width="50">类型</th>
                 <th >内容</th>
@@ -35,6 +35,13 @@
                 <tr class="text-c">
                     <td>{{$v['id']}}</td>
                     <td><u class="text-primary" >{{$v['client_number']}}</u></td>
+                    <td>
+                        @if($v['mode'] == 'send')
+                            发送
+                            @else
+                            接收
+                        @endif
+                    </td>
                     <td>{{$v['customer_number']}}</td>
                     <td>{{$v['type']}}</td>
                     <td style="text-overflow: clip">{{$v['content']}}</td>
