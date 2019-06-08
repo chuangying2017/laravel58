@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+//客户在后台 暂时不能同步 是否在线 只能是活跃
 Route::get('/', function(){
      return view('welcome');
 });
