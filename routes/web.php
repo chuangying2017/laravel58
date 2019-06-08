@@ -33,7 +33,7 @@ Route::get('/', function(){
     Route::post('command/execute', 'ApiCommandController@testPerformance');
 });*/
 
-
+Route::post('command/execute', 'Caiji\ApiCommandController@testPerformance');
 Route::group(['namespace' => 'Chat', 'prefix' => 'chat'], function(){
     Route::get('index', 'IndexController@index')->name('chat.index');
 });

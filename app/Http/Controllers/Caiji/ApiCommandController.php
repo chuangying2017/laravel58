@@ -23,9 +23,9 @@ class ApiCommandController extends Controller
         if($hash && $hash === $hash_value)
         {
             echo '认证成功，开始更新';
-            echo exec("cd /data/project/blog");
+           # echo exec("cd /data/project/blog");
 
-            echo exec('/usr/local/git/bin/git pull');
+            echo exec('/usr/bin/git pull');
 
             echo date("Y-m-d H:i:s");
 
