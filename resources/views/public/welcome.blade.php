@@ -26,7 +26,7 @@
         </tr>
         <tr>
             <td>脚本运行占用最大内存 </td>
-            <td>{{$systeminfo['memorylimit']}}/td>
+            <td>{{$systeminfo['memorylimit']}}</td>
         </tr>
         <tr>
             <td>最大上传文件大小</td>
