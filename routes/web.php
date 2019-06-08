@@ -42,7 +42,7 @@ Route::get('auth/login', function(){
     return view('admin.login');
 })->name('admin.login');
 
-Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function(){
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin','middleware' => 'auth'], function(){
     Route::get('index', 'IndexController@index')->name('admin.index');
     Route::get('welcome', 'IndexController@welcome')->name('admin.welcome');
     Route::get('member', 'IndexController@member_list')->name('admin.memberShow');
