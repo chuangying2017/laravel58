@@ -11,14 +11,14 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>账号：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="username" name="username">
+				<input type="text" class="input-text" value="" placeholder="输入账号" id="username" name="username">
 			</div>
 		</div>
 
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>密码：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="password" class="input-text" value="" placeholder="off" id="password" name="password">
+				<input type="password" class="input-text" value="" placeholder="输入密码" id="password" name="password">
 			</div>
 		</div>
 

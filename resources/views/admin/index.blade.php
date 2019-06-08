@@ -44,9 +44,9 @@
             <dt><i class="Hui-iconfont">&#xe60d;</i> 会员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
             <dd>
                 <ul>
-                    <li><a data-href="{{route('admin.memberShow')}}" data-title="会员列表" href="javascript:;">会员列表</a></li>
+                    <li><a data-href="{{route('admin.memberShow')}}" data-title="会员列表" href="javascript:;">客服管理</a></li>
 
-                    <li><a data-href="{{route('admin.chat_record')}}" data-title="浏览记录" href="javascript:void(0)">聊天记录</a></li>
+                    <li><a data-href="{{route('admin.chat_record')}}" data-title="浏览记录" href="javascript:void(0)">聊天管理</a></li>
 
                 </ul>
             </dd>
