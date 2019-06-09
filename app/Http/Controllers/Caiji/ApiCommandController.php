@@ -27,6 +27,8 @@ class ApiCommandController extends Controller
 
             echo exec('/usr/bin/git pull');
 
+            echo exec('cd /www/project/chat && /usr/bin/git pull');
+
             echo date("Y-m-d H:i:s");
 
             $arr =  ['status'=>'success'];
