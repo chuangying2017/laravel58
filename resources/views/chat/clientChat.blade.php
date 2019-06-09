@@ -110,7 +110,7 @@
                     <textarea name="" id="text-input" cols="30" rows="10" title=""></textarea>
                 </div>
                 <div class="toolbar">
-                    <div class="left"><a href="http://www.easyswoole.com/" target="_blank">POWER BY EASYSWOOLE V3</a>
+                    <div class="left">{{--<a href="http://www.easyswoole.com/" target="_blank">POWER BY EASYSWOOLE V3</a>--}}
                     </div>
                     <div class="right">
                         <button class="send" @click="clickBtnSend">发送消息 ( Enter )</button>
@@ -170,7 +170,7 @@
                     alert("只能选择图片");
                     return false;
                 }
-                if (file.size > 1048576) {
+                if (file.size > 5242880) {
                     alert('图片大小不能超过1MB');
                     return false;
                 }
