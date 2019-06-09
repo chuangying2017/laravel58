@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdn.staticfile.org/amazeui/2.7.2/css/amazeui.min.css">
     <link rel="stylesheet" href="/static/chat/css/login.css?v=190527">
     <script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/layer/2.3/layer.js"></script>
     <title>客户登录</title>
 </head>
 <body>
@@ -50,10 +51,10 @@
             data:{username:username,password:password},
             type:'post',
             dataType:'json',
-            url:'{{route('chat.login')}}',
+            url:'{{route('chat.auth')}}',
             success:function(data){
                 console.log(data)
-                if (data.msg == 'success')
+                if (data.status == 1)
                 {
                     window.location.href=data.src;
                 }else{

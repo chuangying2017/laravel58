@@ -16,7 +16,7 @@ class ChatAuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->session()->has('user'))
+        if (!$request->session()->has('user'))
         {
             return redirect(route('chat.login'));
         }

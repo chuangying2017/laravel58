@@ -381,7 +381,7 @@
 
             },
             changeLogout : function(){
-                $.get('/login/logout', function (data) {
+                $.get('{{route('chat.loginOut')}}', function (data) {
                     if (data.msg == 'success')
                     {
                         window.location.href = data.result.src

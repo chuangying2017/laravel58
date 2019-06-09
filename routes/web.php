@@ -39,9 +39,13 @@ Route::group(['namespace' => 'Chat', 'prefix' => 'chat', 'middleware' => 'chat']
     Route::get('chatShow', 'IndexController@chatShow')->name('chat.show');
 });
 
-Route::get('chat/login', 'Chat\IndexController@login')->name('chat.login');
-Route::post('chat/auth', 'UserDataHandleController@authLogin')->name('chat.auth');
-Route::get('chat/loginOut', 'UserDataHandleController@loginOut')->name('chat.loginOut');
+Route::group(['prefix'=>'chat', 'namespace' => 'Chat'],function (){
+    Route::get('login', 'IndexController@login')->name('chat.login');
+    Route::post('auth', 'UserDataHandleController@authLogin')->name('chat.auth');
+    Route::get('loginOut', 'UserDataHandleController@loginOut')->name('chat.loginOut');
+});
+
+
 
 Route::get('auth/login', function(){
     return view('admin.login');
