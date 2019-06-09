@@ -14,7 +14,10 @@
 Route::get('/', function(){
      return redirect(route('chat.client'));
 });
-
+Route::get('/testPhp', function ()
+{
+    dd($_SERVER);
+});
 /*Route::group(['namespace'=>'Caiji'],function (){
     Route::get('active','IndexController@active');
 
