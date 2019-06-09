@@ -112,10 +112,10 @@
                     <textarea name="" id="text-input" cols="30" rows="10" title=""></textarea>
                 </div>
                 <div class="toolbar">
-                    <div class="left"><a href="http://www.easyswoole.com/" target="_blank">POWER BY EASYSWOOLE V3</a>
+                    <div class="left">{{--<a href="http://www.easyswoole.com/" target="_blank">POWER BY EASYSWOOLE V3</a>--}}
                     </div>
                     <div class="right">
-                        <button class="send" @click="clickBtnSend">发送消息 ( Enter )</button>
+                        <button class="send" @click="clickBtnSend">发送消息</button>
                     </div>
                 </div>
             </div>
@@ -275,7 +275,7 @@
                                     othis.$set(othis.roomUser, 'user' + data.info.fd, data.info);
                                     othis.roomChat.push({
                                         type   : 'tips',
-                                        content: '乘客 ' + data.info.username + ' 已登车',
+                                        content: '欢迎 ' + data.info.username + ' 加入群聊',
                                     });
                                     break;
                                 }
@@ -285,7 +285,7 @@
                                     othis.$delete(othis.roomUser, 'user' + data.userFd);
                                     othis.roomChat.push({
                                         type   : 'tips',
-                                        content: '乘客 ' + username + ' 下车了',
+                                        content: ' ' + username + ' 离开了群聊',
                                     });
                                     break;
                                 }

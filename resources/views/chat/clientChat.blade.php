@@ -274,7 +274,7 @@
                                     othis.$set(othis.roomUser, 'user' + data.info.fd, data.info);
                                     othis.roomChat.push({
                                         type   : 'tips',
-                                        content: '乘客 ' + data.info.username + ' 已登车',
+                                        content: '欢迎 ' + data.info.username + ' 加入群聊',
                                     });
                                     break;
                                 }
@@ -284,7 +284,7 @@
                                     othis.$delete(othis.roomUser, 'user' + data.userFd);
                                     othis.roomChat.push({
                                         type   : 'tips',
-                                        content: '乘客 ' + username + ' 下车了',
+                                        content: ' ' + username + ' 离开了群聊',
                                     });
                                     break;
                                 }
