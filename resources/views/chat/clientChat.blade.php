@@ -16,7 +16,7 @@
 <body>
 <div id="chat">
     <template>
-        <div class="online_window">
+        {{--<div class="online_window">
             <div class="me_info">
                 <div class="me_item">
                     <div class="me_avatar">
@@ -47,14 +47,14 @@
             <div class="online_count">
                 <h6>车上乘客 <span>@{{currentCount}}</span> 位</h6>
             </div>
-        </div>
+        </div>--}}
         <div class="talk_window">
             <div class="windows_top">
-                <div class="windows_top_left"><i class="am-icon am-icon-list online-list"></i> 欢迎乘坐特快列车</div>
-                <div class="windows_top_right">
-             {{--       <a href="javascript:;" @click="changeLogout"
-                       style="color: #999">退出</a>--}}
-                </div>
+                <div class="windows_top_left">{{--<i class="am-icon am-icon-list online-list"></i>--}} 欢迎乘坐特快列车</div>
+                {{--    <div class="windows_top_right">
+             --       <a href="javascript:;" @click="changeLogout"
+                          style="color: #999">退出</a>
+                   </div>--}}
             </div>
             <div class="windows_body" id="chat-window" v-scroll-bottom>
                 <ul class="am-comments-list am-comments-list-flip">
@@ -205,11 +205,11 @@
                     }, 1000 * 30);
                     // 请求获取自己的用户信息和在线列表
                     othis.release('index', 'info');
-                    othis.release('index', 'online');
+                   // othis.release('index', 'online');
                     othis.websocketInstance.onmessage = function (ev) {
                         try {
                             var data = JSON.parse(ev.data);
-                            console.log(data)
+                            console.log(data,'is here start');
                             if (data.sendTime) {
                                 if (othis.up_recv_time + 10 * 1000 > (new Date(data.sendTime)).getTime()) {
                                     othis.up_recv_time = (new Date(data.sendTime)).getTime();

@@ -12,7 +12,7 @@
 */
 //客户在后台 暂时不能同步 是否在线 只能是活跃
 Route::get('/', function(){
-     return view('welcome');
+     return redirect(route('chat.client'));
 });
 
 /*Route::group(['namespace'=>'Caiji'],function (){
