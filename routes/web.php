@@ -34,9 +34,14 @@ Route::get('/', function(){
 });*/
 
 Route::post('push/welcome', 'Caiji\ApiCommandController@pullGithub');
-Route::group(['namespace' => 'Chat', 'prefix' => 'chat'], function(){
-    Route::get('index', 'IndexController@index')->name('chat.index');
+
+Route::group(['namespace' => 'Chat', 'prefix' => 'chat', 'middleware' => 'chat'], function(){
+    Route::get('chatShow', 'IndexController@chatShow')->name('chat.show');
 });
+
+Route::get('chat/login', 'Chat\IndexController@login')->name('chat.login');
+Route::post('chat/auth', 'UserDataHandleController@authLogin')->name('chat.auth');
+Route::get('chat/loginOut', 'UserDataHandleController@loginOut')->name('chat.loginOut');
 
 Route::get('auth/login', function(){
     return view('admin.login');
@@ -63,3 +68,5 @@ Auth::routes();
 Route::get('/home', function (){
     return redirect('admin/index');
 })->name('home');
+
+
