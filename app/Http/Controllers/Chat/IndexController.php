@@ -20,6 +20,6 @@ class IndexController extends Controller
 
     public function clientChat(Request $request)
     {
-        return view('chat.clientChat', ['server' => 'ws://127.0.0.1:9501']);
+        return view('chat.clientChat', ['server' => 'ws://'.$_SERVER['HTTP_HOST'] .':9501']);
     }
 }
