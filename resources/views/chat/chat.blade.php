@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>微聊</title>
+    <title>微客服</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/amazeui/2.7.2/css/amazeui.min.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/layer/2.3/skin/layer.css">
     <link rel="stylesheet" href="/static/chat/css/main.css?v=120203">
@@ -52,7 +52,7 @@
         </div>
         <div class="talk_window">
             <div class="windows_top">
-                <div class="windows_top_left"><i class="am-icon am-icon-list online-list"></i> 欢迎乘坐特快列车</div>
+                <div class="windows_top_left"><i class="am-icon am-icon-list online-list"></i> 微客服</div>
                 <div class="windows_top_right">
                     <a href="javascript:;" @click="changeLogout"
                        style="color: #999">退出</a>
@@ -385,7 +385,7 @@
                 $.get('{{route('chat.loginOut')}}', function (data) {
                     if (data.msg == 'success')
                     {
-                        window.location.href = data.result.src
+                        window.location.href = data.src
                     }
                 });
             }
