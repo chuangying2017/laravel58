@@ -24,9 +24,7 @@
                     </div>
                     <div class="me_status">
                         <div class="me_username">
-                            {{--<i class="am-icon am-icon-pencil" @click="changeName"></i> --}}
-                            编号:&nbsp;
-                            {{$user->number}}
+                            <i class="am-icon am-icon-pencil" @click="changeName"></i> @{{currentUser.username}}
                         </div>
                         <div class="me_income">@{{currentUser.intro}}</div>
                     </div>
@@ -54,8 +52,8 @@
             <div class="windows_top">
                 <div class="windows_top_left"><i class="am-icon am-icon-list online-list"></i> 欢迎乘坐特快列车</div>
                 <div class="windows_top_right">
-                    <a href="javascript:;" @click="changeLogout"
-                       style="color: #999">退出</a>
+             {{--       <a href="javascript:;" @click="changeLogout"
+                       style="color: #999">退出</a>--}}
                 </div>
             </div>
             <div class="windows_body" id="chat-window" v-scroll-bottom>
@@ -192,6 +190,7 @@
                 if (username) {
                     websocketServer += '?username=' + encodeURIComponent(username)
                 }
+                console.log(username)
                 this.websocketInstance = new WebSocket(websocketServer);
                 this.websocketInstance.onopen = function (ev) {
                     // 断线重连处理

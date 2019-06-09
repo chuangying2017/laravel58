@@ -43,6 +43,7 @@ Route::group(['prefix'=>'chat', 'namespace' => 'Chat'],function (){
     Route::get('login', 'IndexController@login')->name('chat.login');
     Route::post('auth', 'UserDataHandleController@authLogin')->name('chat.auth');
     Route::get('loginOut', 'UserDataHandleController@loginOut')->name('chat.loginOut');
+    Route::get('client', 'IndexController@clientChat')->name('chat.client');
 });
 
 
