@@ -69,9 +69,9 @@ if (!function_exists('call_select'))
             $query->whereDate($searchDate,'<=',$data['search_endtime']. ' 23:59:59');
         }
 
-        if (isset($data['username']))
+        if (isset($data['search_username']))
         {
-            $query->where('content','like',"%{$data['username']}%");
+            $query->where('content','like',"%{$data['search_username']}%");
         }
 
         return $query;
