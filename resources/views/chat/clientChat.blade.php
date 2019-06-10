@@ -113,7 +113,8 @@
                     <div class="left">{{--<a href="http://www.easyswoole.com/" target="_blank">POWER BY EASYSWOOLE V3</a>--}}
                     </div>
                     <div class="right">
-                        <button class="send" @click="clickBtnSend">发送消息 ( Enter )</button>
+                        <button class="send" style="margin-right: 5px;" @click="clearContent">清空内容</button>
+                        <button class="send" @click="clickBtnSend">发送消息</button>
                     </div>
                 </div>
             </div>
@@ -134,7 +135,9 @@
             currentUser      : {username: '-----', intro: '-----------', fd: 0, avatar: 0},
             roomUser         : {},
             roomChat         : [],
-            up_recv_time     : 0
+            up_recv_time     : 0,
+            customer_id : 0,
+            customer_number: 0
         },
         created   : function () {
             this.connect();
@@ -170,14 +173,14 @@
                     alert("只能选择图片");
                     return false;
                 }
-                if (file.size > 5242880) {
+                if (file.size > 1048576) {
                     alert('图片大小不能超过1MB');
                     return false;
                 }
                 var reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = function (e) {
-                    othis.broadcastImageMessage(this.result)
+                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.customer_number)
                 }
             }
         },
@@ -220,14 +223,16 @@
                             }
                             switch (data.action) {
                                 case 101: {
-                                    // 收到管理员消息
+                                    // 收到 第一次进来的消息
                                     othis.roomChat.push({
                                         type    : data.type ? data.type : 'text',
                                         fd      : 0,
                                         content : data.content,
                                         avatar  : 'https://www.gravatar.com/avatar/3ee60266a353746d6aab772fb9e2d398?s=200&d=identicon',
-                                        username: '列车乘务员'
+                                        username: data.username
                                     });
+                                    othis.customer_id = data.customer_id; //第一次进来选择客服的Id
+                                    othis.customer_number = data.username; //客服编号
                                     break;
                                 }
                                 case 103 : {
@@ -272,10 +277,10 @@
                                 case 203: {
                                     // 新用户上线
                                     othis.$set(othis.roomUser, 'user' + data.info.fd, data.info);
-                                    othis.roomChat.push({
+                                 /*   othis.roomChat.push({
                                         type   : 'tips',
                                         content: '欢迎 ' + data.info.username + ' 加入群聊',
-                                    });
+                                    });*/
                                     break;
                                 }
                                 case 204: {
@@ -330,17 +335,22 @@
             },
             /**
              * 发送文本消息
-             * @param content
+             * @param content 发送主题
+             * @param fd 要发送的用户
+             * @param username 客服编号
              */
-            broadcastTextMessage : function (content) {
-                this.release('broadcast', 'roomBroadcast', {content: content, type: 'text'})
+            broadcastTextMessage : function (content,fd,username) {
+                console.log(fd,'send user fd_id');
+                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: fd,username:username})
             },
             /**
              * 发送图片消息
              * @param base64_content
+             * @param fd 要发送的用户
+             * @param username 客服编号
              */
-            broadcastImageMessage: function (base64_content) {
-                this.release('broadcast', 'roomBroadcast', {content: base64_content, type: 'image'})
+            broadcastImageMessage: function (base64_content,fd,username) {
+                this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,username:username})
             },
             picture              : function () {
                 var input = document.getElementById("fileInput");
@@ -355,7 +365,7 @@
                 var content = textInput.val();
                 if (content.trim() !== '') {
                     if (this.websocketInstance && this.websocketInstance.readyState === 1) {
-                        this.broadcastTextMessage(content);
+                        this.broadcastTextMessage(content,this.customer_id,this.customer_number);
                         textInput.val('');
                     } else {
                         layer.tips('连接已断开', '.windows_input', {
@@ -387,6 +397,10 @@
                         window.location.href = data.result.src
                     }
                 });
+            },
+            clearContent : function () {
+                var textInput = $('#text-input');
+                textInput.val('');
             }
         },
         computed  : {

@@ -136,7 +136,9 @@
             currentUser      : {username: '-----', intro: '-----------', fd: 0, avatar: 0},
             roomUser         : {},
             roomChat         : [],
-            up_recv_time     : 0
+            up_recv_time     : 0,
+            customer_number : "{{$user->number}}",
+            customer_id : "{{$user->id}}"
         },
         created   : function () {
             this.connect();
@@ -205,7 +207,10 @@
                         othis.websocketInstance.send('PING');
                     }, 1000 * 30);
                     // 请求获取自己的用户信息和在线列表
-                    othis.release('index', 'info');
+                    var cus = {};
+                    cus.customer_id = othis.customer_id;
+                    cus.username = othis.customer_number;
+                    othis.release('index', 'info',cus); //插入在线列表
                     othis.release('index', 'online');
                     othis.websocketInstance.onmessage = function (ev) {
                         try {
@@ -227,7 +232,7 @@
                                         fd      : 0,
                                         content : data.content,
                                         avatar  : 'https://www.gravatar.com/avatar/3ee60266a353746d6aab772fb9e2d398?s=200&d=identicon',
-                                        username: '列车乘务员'
+                                        username: data.username
                                     });
                                     break;
                                 }
@@ -273,10 +278,10 @@
                                 case 203: {
                                     // 新用户上线
                                     othis.$set(othis.roomUser, 'user' + data.info.fd, data.info);
-                                    othis.roomChat.push({
+                                   /* othis.roomChat.push({
                                         type   : 'tips',
                                         content: '欢迎 ' + data.info.username + ' 加入群聊',
-                                    });
+                                    });*/
                                     break;
                                 }
                                 case 204: {

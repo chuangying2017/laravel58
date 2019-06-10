@@ -51,6 +51,7 @@ Route::group(['prefix'=>'chat', 'namespace' => 'Chat'],function (){
 
 
 
+
 Route::get('auth/login', function(){
     return view('admin.login');
 })->name('admin.login');
