@@ -74,7 +74,7 @@ class Member
 
         $query = call_select($query,$condition);
 
-        return $query->has('customer')->with('customer:id,username,number')->paginate(20);
+        return $query->has('customer')->with('customer:id,username,number')->orderBy('created_at','desc')->paginate(20);
     }
 
     public function array_each($data)
@@ -84,7 +84,16 @@ class Member
                 $customer = $v['customer'];
                 $v['customer_number'] = $customer['number'];
                 $v['customer_username'] = $customer['username'];
-                $v['type'] = $v['type'] == 'msg' ? '信息' : '图片';
+
+                if ($v['type'] == 'msg')
+                {
+                    $v['content'] = substr($v['content'],0,100);
+                    $v['type'] = '信息';
+                }else{
+                    $v['type'] = '图片';
+                    $v['content'] = substr($v['content'],0,50);
+                }
+
         }
 
         return $data;
