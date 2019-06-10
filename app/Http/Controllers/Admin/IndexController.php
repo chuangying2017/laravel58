@@ -36,6 +36,12 @@ class IndexController extends Controller
 
     public function chat_record(Member $member)
     {
-        return view('admin.record', ['record' => $member->array_each($member->chat_get())]);
+        $all = \request()->all();
+        return view('admin.record', [
+            'record' => $member->array_each($member->chat_get($all)),
+            'search_startTime' => $all['search_starttime'] ?? null,
+            'search_endTime' => $all['search_endtime'] ?? null,
+            'search_username' => $all['search_username'] ?? null
+            ]);
     }
 }

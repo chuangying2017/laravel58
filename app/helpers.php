@@ -51,3 +51,29 @@ function getSystemInfo() {
 
     return $systemInfo;
 }
+
+if (!function_exists('call_select'))
+{
+    function call_select(\Illuminate\Database\Eloquent\Builder $query,$data)
+    {
+
+        $searchDate = 'created_at';
+        if (isset($data['search_starttime']) && isset($data['search_endtime']))
+        {
+            $query->whereBetween($searchDate,[$data['search_starttime'] .' 00:00:00',$data['search_endtime']. ' 23:59:59']);
+        }elseif (isset($data['search_starttime']))
+        {
+            $query->whereDate($searchDate,'>=',$data['search_starttime'].' 00:00:00');
+        }elseif (isset($data['search_endtime']))
+        {
+            $query->whereDate($searchDate,'<=',$data['search_endtime']. ' 23:59:59');
+        }
+
+        if (isset($data['username']))
+        {
+            $query->where('content','like',"%{$data['username']}%");
+        }
+
+        return $query;
+    }
+}

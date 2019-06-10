@@ -68,9 +68,12 @@ class Member
         return ModelConfig::status($this->customer::destroy($id));
     }
 
-    public function chat_get()
+    public function chat_get($condition = null)
     {
         $query = SessionRecord::query();
+
+        $query = call_select($query,$condition);
+
         return $query->has('customer')->with('customer:id,username,number')->paginate(20);
     }
 

@@ -6,13 +6,15 @@
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span class="c-gray en">&gt;</span> 聊天记录 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
-    {{--   <div class="text-c"> 日期范围：
-           <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">
+    <form method="get" action="{{route('admin.chat_record')}}">
+       <div class="text-c"> 日期范围：
+           <input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" name='search_starttime' value="{{$search_startTime}}" class="input-text Wdate" style="width:120px;">
            -
-           <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
-           <input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱" id="" name="">
-           <button type="submit" class="btn btn-success radius" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜用户</button>
-       </div>--}}
+           <input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" name='search_endtime' value="{{$search_endTime}}" class="input-text Wdate" style="width:120px;">
+           <input type="text" class="input-text" style="width:250px" name="search_username" value="{{$search_username}}" placeholder="输入账号、编号、对话内容" id="" >
+           <button type="submit" class="btn btn-success radius" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+       </div>
+    </form>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
         <span class="r">共有数据：<strong>{{count($record)}}</strong> 条</span> </div>
     <div class="mt-20">
@@ -26,7 +28,7 @@
                 <th width="90">客服号</th>
                 <th width="50">类型</th>
                 <th >内容</th>
-                <th width="130">加入时间</th>
+                <th width="130">发送时间</th>
 
             </tr>
             </thead>
