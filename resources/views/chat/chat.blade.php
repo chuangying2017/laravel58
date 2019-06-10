@@ -137,7 +137,8 @@
             roomUser         : {},
             roomChat         : [],
             up_recv_time     : 0,
-            customer_number : "{{$user->number}}",
+            AllFd: {},
+            customer_number : "{{$user->number}}",  //客户编号 or 客服编号
             customer_id : "{{$user->id}}"
         },
         created   : function () {
@@ -181,7 +182,7 @@
                 var reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = function (e) {
-                    othis.broadcastImageMessage(this.result)
+                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.customer_number)
                 }
             }
         },
@@ -211,7 +212,7 @@
                     cus.customer_id = othis.customer_id;
                     cus.username = othis.customer_number;
                     othis.release('index', 'info',cus); //插入在线列表
-                    othis.release('index', 'online');
+                   // othis.release('index', 'online');
                     othis.websocketInstance.onmessage = function (ev) {
                         try {
                             var data = JSON.parse(ev.data);
@@ -238,14 +239,23 @@
                                 }
                                 case 103 : {
                                     // 收到用户消息
-                                    var broadcastMsg = {
+                                    var broadcastMsg;
+
+                                    broadcastMsg = {
                                         type    : data.type,
                                         fd      : data.fromUserFd,
                                         content : data.content,
-                                        avatar  : othis.roomUser['user' + data.fromUserFd].avatar,
-                                        username: othis.roomUser['user' + data.fromUserFd].username,
+                                        avatar  : data.avatar,
+                                        username: data.username,
                                         sendTime: data.sendTime
                                     };
+
+                                    othis.AllFd['user' + data.fromUserFd] = data.fromUserFd;
+                                    if (data.username != othis.currentUser.username)
+                                    {
+                                        othis.customer_number = data.username;
+                                    }
+
                                     othis.roomChat.push(broadcastMsg);
                                     break;
                                 }
@@ -276,7 +286,7 @@
                                     break;
                                 }
                                 case 203: {
-                                    // 新用户上线
+                                    // 将新用户插入会话 列表
                                     othis.$set(othis.roomUser, 'user' + data.info.fd, data.info);
                                    /* othis.roomChat.push({
                                         type   : 'tips',
@@ -290,7 +300,7 @@
                                     othis.$delete(othis.roomUser, 'user' + data.userFd);
                                     othis.roomChat.push({
                                         type   : 'tips',
-                                        content: ' ' + username + ' 离开了群聊',
+                                        content: ' ' + username + ' 离开了',
                                     });
                                     break;
                                 }
@@ -337,16 +347,22 @@
             /**
              * 发送文本消息
              * @param content
+             * @param fd 客服id
+             * @param username 客户号
              */
-            broadcastTextMessage : function (content) {
-                this.release('broadcast', 'roomBroadcast', {content: content, type: 'text'})
+            broadcastTextMessage : function (content,fd,username) {
+                console.log('send text', fd , username)
+                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd:fd,username:username})
             },
             /**
              * 发送图片消息
              * @param base64_content
+             * @param fd 客服id
+             * @param username 客户号
              */
-            broadcastImageMessage: function (base64_content) {
-                this.release('broadcast', 'roomBroadcast', {content: base64_content, type: 'image'})
+            broadcastImageMessage: function (base64_content,fd,username) {
+                console.log('send image', fd , username)
+                this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,username:username})
             },
             picture              : function () {
                 var input = document.getElementById("fileInput");
@@ -361,7 +377,7 @@
                 var content = textInput.val();
                 if (content.trim() !== '') {
                     if (this.websocketInstance && this.websocketInstance.readyState === 1) {
-                        this.broadcastTextMessage(content);
+                        this.broadcastTextMessage(content,this.customer_id,this.customer_number);
                         textInput.val('');
                     } else {
                         layer.tips('连接已断开', '.windows_input', {

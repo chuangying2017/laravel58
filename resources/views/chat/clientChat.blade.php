@@ -58,7 +58,7 @@
             </div>
             --}}
 
-            <div class="windows_body" id="chat-window" v-scroll-bottom>
+            <div class="windows_body" style="height: 504px;" id="chat-window" v-scroll-bottom>
                 <ul class="am-comments-list am-comments-list-flip">
                     <template v-for="chat in roomChat">
                         <template v-if="chat.type === 'tips'">
@@ -243,8 +243,8 @@
                                         type    : data.type,
                                         fd      : data.fromUserFd,
                                         content : data.content,
-                                        avatar  : othis.roomUser['user' + data.fromUserFd].avatar,
-                                        username: othis.roomUser['user' + data.fromUserFd].username,
+                                        avatar  : data.avatar,
+                                        username: data.username,
                                         sendTime: data.sendTime
                                     };
                                     othis.roomChat.push(broadcastMsg);
