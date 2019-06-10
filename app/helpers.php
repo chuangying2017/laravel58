@@ -71,7 +71,8 @@ if (!function_exists('call_select'))
 
         if (isset($data['search_username']))
         {
-            $query->where('content','like',"%{$data['search_username']}%");
+            $query->where('content','like',"%{$data['search_username']}%")->OrWhere('client_number','like',$data['search_username']);
+
         }
 
         return $query;
