@@ -19,6 +19,10 @@ class UserDataHandleController extends Controller
 
         if ($res)
         {
+            if (in_array($res['status'],['inactive','discard']))
+            {
+                return ['status'=>'2','msg'=>'当前客服为禁用状态'];
+            }
             $session = $request->getSession();
 
             $session->put('user',$res);
