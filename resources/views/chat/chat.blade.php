@@ -259,7 +259,10 @@
 
                                     if (typeof(othis.roomUser['user'+ data.fromUserFd]) == "undefined")
                                     {
-                                        othis.roomUser['user'+ data.fromUserFd] = {avatar:data.avatar, username:data.username};
+                                        if (data.username != othis.currentUser.username)
+                                        {
+                                            othis.roomUser['user'+ data.fromUserFd] = {avatar:data.avatar, username:data.username};
+                                        }
                                     }
 
                                     othis.userData[data.masterId].push(broadcastMsg);
