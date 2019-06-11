@@ -12,8 +12,14 @@ return [
     | these language lines according to your application's requirements.
     |
     */
+    /*
+     * 'failed' => 'These credentials do not match our records.',
+     *
+     * 'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+     *
+     * */
 
-    'failed' => 'These credentials do not match our records.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'failed' => '账号或密码错误',
+    'throttle' => '登录尝试次数过多，请再试一次',
 
 ];
