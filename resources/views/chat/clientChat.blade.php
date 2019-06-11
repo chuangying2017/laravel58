@@ -8,7 +8,7 @@
     <title>微聊</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/amazeui/2.7.2/css/amazeui.min.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/layer/2.3/skin/layer.css">
-    <link rel="stylesheet" href="/static/chat/css/main.css?v=120203">
+    <link rel="stylesheet" href="/static/chat/css/client.css?v=120203">
     <script src="https://cdn.staticfile.org/vue/2.5.17-beta.0/vue.js"></script>
     <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/layer/2.3/layer.js"></script>
@@ -16,49 +16,16 @@
 <body>
 <div id="chat">
     <template>
-        {{--<div class="online_window">
-            <div class="me_info">
-                <div class="me_item">
-                    <div class="me_avatar">
-                        <img :src="currentUser.avatar" alt="">
-                    </div>
-                    <div class="me_status">
-                        <div class="me_username">
-                            <i class="am-icon am-icon-pencil" @click="changeName"></i> @{{currentUser.username}}
-                        </div>
-                        <div class="me_income">@{{currentUser.intro}}</div>
-                    </div>
-                    <div class="times-icon"><i class="am-icon am-icon-times"></i></div>
-                </div>
-            </div>
-            <div class="online_list">
-                <div class="online_list_header">车上乘客</div>
-                <div class="online_item" v-for="user in roomUser">
-                    <template v-if="user">
-                        <div class="online_avatar">
-                            <img :src="user.avatar" alt="">
-                        </div>
-                        <div class="online_status">
-                            <div class="online_username">@{{user.username}}</div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-            <div class="online_count">
-                <h6>车上乘客 <span>@{{currentCount}}</span> 位</h6>
-            </div>
-        </div>--}}
         <div class="talk_window">
-            {{--  <div class="windows_top">
+              <div class="windows_top">
                   <div class="windows_top_left"> <i class="am-icon am-icon-list online-list"></i> </div>
                     <div class="windows_top_right">
-                  <a href="javascript:;" @click="changeLogout"
-                          style="color: #999">退出</a>
+                  {{--<a href="javascript:;" @click="changeLogout"
+                          style="color: #999">退出</a>--}}
                    </div>
             </div>
-            --}}
 
-            <div class="windows_body" style="height: 504px;" id="chat-window" v-scroll-bottom>
+            <div class="windows_body" id="chat-window" v-scroll-bottom>
                 <ul class="am-comments-list am-comments-list-flip">
                     <template v-for="chat in roomChat">
                         <template v-if="chat.type === 'tips'">
