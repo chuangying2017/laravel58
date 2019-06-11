@@ -367,7 +367,9 @@
              */
             broadcastTextMessage : function (content,fd,username) {
                 console.log('send text', fd , username)
-                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd:fd,username:username,masterId:username})
+                this.release('Customer', 'sendPersonal',
+                    {content: content, type: 'text',toUserFd:fd,username:username,masterId:username,mode:'customer'}
+                    )
             },
             /**
              * 发送图片消息
@@ -377,7 +379,9 @@
              */
             broadcastImageMessage: function (base64_content,fd,username) {
                 console.log('send image', fd , username)
-                this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,username:username,masterId:username})
+                this.release('Customer', 'sendPersonal',
+                    {content: base64_content, type: 'image',toUserFd:fd,username:username,masterId:username,mode:'customer'}
+                    )
             },
             picture              : function () {
                 var input = document.getElementById("fileInput");
