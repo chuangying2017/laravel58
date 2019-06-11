@@ -182,7 +182,7 @@
                 var reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = function (e) {
-                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.customer_number)
+                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.customer_number,othis.currentUser.username)
                 }
             }
         },
@@ -340,19 +340,21 @@
              * @param content 发送主题
              * @param fd 要发送的用户
              * @param username 客服编号
+             * @param masterId 聊天组的id
              */
-            broadcastTextMessage : function (content,fd,username) {
+            broadcastTextMessage : function (content,fd,username,masterId) {
                 console.log(fd,'send user fd_id');
-                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: fd,username:username})
+                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: fd,username:username,masterId:masterId})
             },
             /**
              * 发送图片消息
              * @param base64_content
              * @param fd 要发送的用户
              * @param username 客服编号
+             * @param masterId 聊天组的id
              */
-            broadcastImageMessage: function (base64_content,fd,username) {
-                this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,username:username})
+            broadcastImageMessage: function (base64_content,fd,username,masterId) {
+                this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,username:username,masterId:masterId})
             },
             picture              : function () {
                 var input = document.getElementById("fileInput");
@@ -367,7 +369,7 @@
                 var content = textInput.val();
                 if (content.trim() !== '') {
                     if (this.websocketInstance && this.websocketInstance.readyState === 1) {
-                        this.broadcastTextMessage(content,this.customer_id,this.customer_number);
+                        this.broadcastTextMessage(content,this.customer_id,this.customer_number,this.currentUser.username);
                         textInput.val('');
                     } else {
                         layer.tips('连接已断开', '.windows_input', {

@@ -35,9 +35,9 @@
             </div>
             <div class="online_list">
                 <div class="online_list_header">车上乘客</div>
-                <div class="online_item" v-for="user in roomUser">
+                <div class="online_item" v-on:click="freed(user.username)" v-for="user in roomUser">
                     <template v-if="user">
-                        <div class="online_avatar">
+                        <div  class="online_avatar">
                             <img :src="user.avatar" alt="">
                         </div>
                         <div class="online_status">
@@ -137,6 +137,7 @@
             roomUser         : {},
             roomChat         : [],
             up_recv_time     : 0,
+            userData: {}, //存储所有的用户数据
             AllFd: {},
             customer_number : "{{$user->number}}",  //客户编号 or 客服编号
             customer_id : "{{$user->id}}"
@@ -250,11 +251,22 @@
                                         sendTime: data.sendTime
                                     };
 
-                                    othis.AllFd['user' + data.fromUserFd] = data.fromUserFd;
-                                    if (data.username != othis.currentUser.username)
+                                    if (typeof(othis.userData[data.masterId]) == "undefined")
                                     {
-                                        othis.customer_number = data.username;
+                                        othis.userData[data.masterId] = [];
                                     }
+
+
+                                    if (typeof(othis.roomUser['user'+ data.fromUserFd]) == "undefined")
+                                    {
+                                        othis.roomUser['user'+ data.fromUserFd] = {avatar:data.avatar, username:data.username};
+                                    }
+
+                                    othis.userData[data.masterId].push(broadcastMsg);
+
+                                    othis.AllFd['user' + data.fromUserFd] = data.fromUserFd;
+
+                                    console.log(othis.userData);
 
                                     othis.roomChat.push(broadcastMsg);
                                     break;
@@ -352,7 +364,7 @@
              */
             broadcastTextMessage : function (content,fd,username) {
                 console.log('send text', fd , username)
-                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd:fd,username:username})
+                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd:fd,username:username,masterId:username})
             },
             /**
              * 发送图片消息
@@ -362,7 +374,7 @@
              */
             broadcastImageMessage: function (base64_content,fd,username) {
                 console.log('send image', fd , username)
-                this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,username:username})
+                this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,username:username,masterId:username})
             },
             picture              : function () {
                 var input = document.getElementById("fileInput");
@@ -409,6 +421,17 @@
                         window.location.href = data.src
                     }
                 });
+            },
+            freed: function(fe){
+                //console.log(fe);
+                this.roomChat = [];
+                console.log(this.userData[fe]);
+                for (let i in this.userData[fe])
+                {
+                    this.roomChat.push(this.userData[fe][i]);
+                }
+                console.log(this.roomChat);
+                this.customer_number = fe;
             }
         },
         computed  : {
