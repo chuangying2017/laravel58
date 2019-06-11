@@ -176,8 +176,8 @@
                     alert("只能选择图片");
                     return false;
                 }
-                if (file.size > 1048576) {
-                    alert('图片大小不能超过1MB');
+                if (file.size > 8388608) {
+                    alert('图片大小不能超过8MB');
                     return false;
                 }
                 var reader = new FileReader();
