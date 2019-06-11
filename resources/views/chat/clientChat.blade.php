@@ -18,7 +18,7 @@
     <template>
         <div class="talk_window">
               <div class="windows_top">
-                  <div class="windows_top_left"> <i class="am-icon am-icon-list online-list"></i> </div>
+                  <div class="windows_top_left"> {{--<i class="am-icon am-icon-list online-list"></i> --}}</div>
                     <div class="windows_top_right">
                   {{--<a href="javascript:;" @click="changeLogout"
                           style="color: #999">退出</a>--}}
