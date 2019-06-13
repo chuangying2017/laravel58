@@ -82,7 +82,7 @@
                     <div class="left">{{--<a href="http://www.easyswoole.com/" target="_blank">POWER BY EASYSWOOLE V3</a>--}}
                     </div>
                     <div class="right">
-                        <button class="send" style="margin-right: 5px;" @click="clearContent">清空内容</button>
+                        <button class="send" @click="clearContent">清空内容</button>
                         <button class="send" @click="clickBtnSend">发送消息</button>
                     </div>
                 </div>
