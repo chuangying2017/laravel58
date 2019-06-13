@@ -133,13 +133,13 @@
             ReconnectTimer   : null,
             HeartBeatTimer   : null,
             ReconnectBox     : null,
-            currentUser      : {username: '-----', intro: '-----------', fd: 0, avatar: 0},
+            currentUser      : {username: '{{$user->number}}', intro: '-----------', fd: 0, avatar: 0},
             roomUser         : {},
             roomChat         : [],
             up_recv_time     : 0,
             userData: {}, //存储所有的用户数据
             AllFd: {},
-            customer_number : "{{$user->number}}",  //客户编号 or 客服编号
+            chatCurrent_number : 0,  //当前聊天对象
             customer_id : "{{$user->id}}"
         },
         created   : function () {
@@ -183,7 +183,7 @@
                 var reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = function (e) {
-                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.customer_number)
+                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.chatCurrent_number)
                 }
             }
         },
@@ -211,7 +211,7 @@
                     // 请求获取自己的用户信息和在线列表
                     var cus = {};
                     cus.customer_id = othis.customer_id;
-                    cus.username = othis.customer_number;
+                    cus.username = othis.currentUser.username;
                     othis.release('index', 'info',cus); //插入在线列表
                    // othis.release('index', 'online');
                     othis.websocketInstance.onmessage = function (ev) {
@@ -268,10 +268,13 @@
                                     othis.userData[data.masterId].push(broadcastMsg);
 
                                     othis.AllFd['user' + data.fromUserFd] = data.fromUserFd;
+                                    //当发送的用户 等于 当前聊天窗口的用户 马上推送到当前聊天窗口
+                                    var arr = [othis.chatCurrent_number,othis.currentUser.username];
+                                    if (arr.includes(data.username))
+                                    {
+                                        othis.roomChat.push(broadcastMsg);
+                                    }
 
-                                    console.log(othis.userData);
-
-                                    othis.roomChat.push(broadcastMsg);
                                     break;
                                 }
                                 case 104 : {
@@ -392,11 +395,19 @@
              * @return void
              */
             clickBtnSend         : function () {
+                var othis = this;
                 var textInput = $('#text-input');
                 var content = textInput.val();
+
+
+                if (othis.chatCurrent_number <= 0)
+                {
+                    layer.msg('请选择发送的用户')
+                }
+
                 if (content.trim() !== '') {
                     if (this.websocketInstance && this.websocketInstance.readyState === 1) {
-                        this.broadcastTextMessage(content,this.customer_id,this.customer_number);
+                        this.broadcastTextMessage(content,othis.customer_id,othis.chatCurrent_number);
                         textInput.val('');
                     } else {
                         layer.tips('连接已断开', '.windows_input', {
@@ -438,7 +449,7 @@
                     this.roomChat.push(this.userData[fe][i]);
                 }
                 console.log(this.roomChat);
-                this.customer_number = fe;
+                this.chatCurrent_number = fe;
             }
         },
         computed  : {

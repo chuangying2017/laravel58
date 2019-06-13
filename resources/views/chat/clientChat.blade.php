@@ -79,7 +79,7 @@
                     <textarea name="" id="text-input" cols="30" rows="10" title=""></textarea>
                 </div>
                 <div class="toolbar">
-                    <div class="left">{{--<a href="http://www.easyswoole.com/" target="_blank">POWER BY EASYSWOOLE V3</a>--}}
+                    <div class="left">
                     </div>
                     <div class="right">
                         <button class="send" @click="clearContent">清空内容</button>
