@@ -8,7 +8,7 @@
     <title>微客服</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/amazeui/2.7.2/css/amazeui.min.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/layer/2.3/skin/layer.css">
-    <link rel="stylesheet" href="/static/chat/css/main.css?v=120203">
+    <link rel="stylesheet" href="/static/chat/css/main.css?v=120205">
     <script src="https://cdn.staticfile.org/vue/2.5.17-beta.0/vue.js"></script>
     <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/layer/2.3/layer.js"></script>
@@ -112,9 +112,10 @@
                     <textarea name="" id="text-input" cols="30" rows="10" title=""></textarea>
                 </div>
                 <div class="toolbar">
-                    <div class="left">{{--<a href="http://www.easyswoole.com/" target="_blank">POWER BY EASYSWOOLE V3</a>--}}
+                    <div class="left">
                     </div>
                     <div class="right">
+                        <button class="send" @click="clearContent">清空消息</button>
                         <button class="send" @click="clickBtnSend">发送消息</button>
                     </div>
                 </div>
@@ -273,6 +274,8 @@
                                     if (arr.includes(data.username))
                                     {
                                         othis.roomChat.push(broadcastMsg);
+                                    }else{
+                                        //新消息提示
                                     }
 
                                     break;
@@ -450,6 +453,10 @@
                 }
                 console.log(this.roomChat);
                 this.chatCurrent_number = fe;
+            },
+            clearContent : function () {
+                var textInput = $('#text-input');
+                textInput.val('');
             }
         },
         computed  : {
