@@ -18,6 +18,7 @@ class CreateTablesCustomer extends Migration
             $table->char('username',50)->default(0)->comment('客服账号');
             $table->char('number',50)->default(0)->comment('客服号');
             $table->enum('status',['active', 'inactive','discard'])->default('active')->comment('账号状态');
+            $table->integer('manger_id')->default(0);
             $table->char('password')->default(0);
             $table->timestamps();
         });

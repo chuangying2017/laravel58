@@ -8,6 +8,7 @@ trait ModelConfig
 {
     public static $time = 'createTime';
 
+
     //二维数组去除重复指定字段的数值
 
     /**
