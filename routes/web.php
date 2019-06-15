@@ -56,7 +56,7 @@ Route::get('auth/login', function(){
     return view('admin.login');
 })->name('admin.login');
 
-Route::group(['namespace' => 'Admin', 'prefix' => 'admin','middleware' => 'auth'], function(){
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function(){
     Route::get('index', 'IndexController@index')->name('admin.index');
     Route::get('welcome', 'IndexController@welcome')->name('admin.welcome');
     Route::get('member', 'IndexController@member_list')->name('admin.memberShow');
@@ -65,6 +65,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin','middleware' => 'auth'
     Route::resource('member_logic', 'MemberController');
     Route::post('member_logic/status', 'MemberController@statusEdit')->name('admin.member.statusEdit');
     Route::get('chat_record', 'IndexController@chat_record')->name('admin.chat_record');
+    Route::get('role_show', 'RoleController@index')->name('role.show');
+    Route::get('permission_show', 'PermissionController@index')->name('permission.show');
+    Route::get('admin_show', 'AdminController@index')->name('admin.show');
+    Route::get('permission-add-show', 'PermissionController@permissionAddShow')->name('permission.add_show');
 
     Route::get('test', function (\App\Repository\Chat\Member $member)
     {

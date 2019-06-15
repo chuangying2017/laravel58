@@ -12,7 +12,7 @@
                 <ul class="cl">
                     <li>管理员</li>
                     <li class="dropDown dropDown_hover">
-                        <a href="#" class="dropDown_A">{{request()->user()->name}} <i class="Hui-iconfont">&#xe6d5;</i></a>
+                        <a href="#" class="dropDown_A">@if(isset(request()->user()->name)) {{request()->user()->name}} @else 测试管理员 @endif<i class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
 
                             <li><a href="{{route('logout')}}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">退出</a></li>
@@ -48,6 +48,16 @@
 
                     <li><a data-href="{{route('admin.chat_record')}}" data-title="浏览记录" href="javascript:void(0)">聊天管理</a></li>
 
+                </ul>
+            </dd>
+        </dl>
+        <dl id="menu-admin">
+            <dt><i class="Hui-iconfont">&#xe62d;</i> 管理员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+            <dd>
+                <ul>
+                    <li><a data-href="{{route('role.show')}}" data-title="角色管理" href="javascript:void(0)">角色管理</a></li>
+                    <li><a data-href="{{route('permission.show')}}" data-title="权限管理" href="javascript:void(0)">权限管理</a></li>
+                    <li><a data-href="{{route('admin.show')}}" data-title="管理员列表" href="javascript:void(0)">管理员列表</a></li>
                 </ul>
             </dd>
         </dl>
