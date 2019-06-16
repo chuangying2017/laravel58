@@ -2,7 +2,6 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\ChatAuthMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -61,7 +60,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'chat' => ChatAuthMiddleware::class,
+        'chat' => \App\Http\Middleware\ChatAuthMiddleware::class,
+        'checkRole' => \App\Http\Middleware\CheckRoleMiddleware::class,
     ];
 
     /**

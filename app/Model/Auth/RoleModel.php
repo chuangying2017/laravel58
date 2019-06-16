@@ -2,8 +2,7 @@
 
 namespace App\Model\Auth;
 
-use App\Model\RoleAbles;
-use App\Model\UserAbles;
+use App\Model\User;
 use Illuminate\Database\Eloquent\Model;
 
 class RoleModel extends Model
@@ -12,11 +11,11 @@ class RoleModel extends Model
 
     public function permission()
     {
-        return $this->morphToMany(RoleAbles::class,'role_able');
+        return $this->morphToMany(PermissionModel::class,'roleable','role_ables');
     }
 
     public function user()
     {
-        return $this->morphToMany(UserAbles::class,'user_able');
+        return $this->morphToMany(User::class,'userable');
     }
 }

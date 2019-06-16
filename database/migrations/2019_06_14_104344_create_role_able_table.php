@@ -13,10 +13,10 @@ class CreateRoleAbleTable extends Migration
      */
     public function up()
     {
-        Schema::create('role_able', function (Blueprint $table) {
-            $table->integer('id');
-            $table->integer('role_able_id');
-            $table->string('role_able_type');
+        Schema::create('role_ables', function (Blueprint $table) {
+            $table->integer('permission_model_id');
+            $table->integer('roleable_id');
+            $table->string('roleable_type');
         });
     }
 

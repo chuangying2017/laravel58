@@ -77,3 +77,16 @@ if (!function_exists('call_select'))
         return $query;
     }
 }
+
+if (!function_exists('status')) {
+    function status($data, $msg = '操作成功', $err = '操作失败'): array
+    {
+        if ($data) {
+            $res = ['status' => 1, 'msg' => $msg];
+        } else {
+            $res = ['status' => 2, 'msg' => $err];
+        }
+
+        return $res;
+    }
+}

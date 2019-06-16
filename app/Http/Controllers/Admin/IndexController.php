@@ -3,15 +3,64 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Repository\Chat\Member;
+use App\Repository\InterfaceRepository\CurdInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class IndexController extends Controller
 {
-    //
+
+    protected $permissionRepository;
+
+    public function __construct(CurdInterface $permissionRepository)
+    {
+        $this->permissionRepository = $permissionRepository;
+    }
+
     public function index()
     {
-        return view('admin.index');
+        $res = $this->permissionRepository->get();
+
+        $arr = [];
+
+        foreach ($res as $k => $v)
+        {
+            if ($v['pid'] <= 0)
+            {
+
+                $str = $v['style'];
+
+                if (strpos($str,'.') !== false)
+                {
+                    $style = explode('.',$str);
+                }else{
+                    $style = [];
+                }
+                $v['style'] = $style;
+
+                $arr[$v['id']]['parent'] = $v;
+            }else{
+                //
+
+                $count = substr_count($v['path'],'-');
+
+                if ($count > 1)
+                {
+                    //三级分类
+                    $value = explode('-',$v['path']);
+
+                    $min = collect($value)->min();
+
+                    $arr[$min]['children'][$v['pid']]['children'] = $v;
+                }else{
+                  //二级分类
+                    $arr[$v['pid']]['children'][$v['id']] = $v;
+                }
+
+            }
+        }
+
+        return view('admin.index', ['arr' => $arr]);
     }
 
     public function welcome()

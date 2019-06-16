@@ -12,29 +12,17 @@
 */
 //客户在后台 暂时不能同步 是否在线 只能是活跃
 Route::get('/', function(){
+
      return redirect(route('chat.client'));
 });
+
+
 Route::get('/testPhp', function ()
 {
-    dd($_SERVER);
+    $arr = [2,78,988,99,22,555,6];
+
+    dd(collect($arr)->min());
 });
-/*Route::group(['namespace'=>'Caiji'],function (){
-    Route::get('active','IndexController@active');
-
-    Route::get('index', 'IndexController@index');
-
-    Route::get('/', 'IndexController@content')->name('active.content');
-
-    Route::get('content/detail', 'IndexController@detail')->name('content.detail');
-
-    Route::post('active/insert','ApiActiveController@insert');
-
-    Route::get('test', 'ApiActiveController@test');
-
-    Route::post('push/welcome', 'ApiCommandController@pullGithub');
-
-    Route::post('command/execute', 'ApiCommandController@testPerformance');
-});*/
 
 Route::post('push/welcome', 'Caiji\ApiCommandController@pullGithub');
 
@@ -49,14 +37,15 @@ Route::group(['prefix'=>'chat', 'namespace' => 'Chat'],function (){
     Route::get('client', 'IndexController@clientChat')->name('chat.client');
 });
 
-
+//重定向 提示信息
+Route::get('alert_message', 'RedirectController@index')->name('admin.alert_message');
 
 
 Route::get('auth/login', function(){
     return view('admin.login');
 })->name('admin.login');
 
-Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function(){
+Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['auth','checkRole']], function(){
     Route::get('index', 'IndexController@index')->name('admin.index');
     Route::get('welcome', 'IndexController@welcome')->name('admin.welcome');
     Route::get('member', 'IndexController@member_list')->name('admin.memberShow');
@@ -65,10 +54,43 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin'], function(){
     Route::resource('member_logic', 'MemberController');
     Route::post('member_logic/status', 'MemberController@statusEdit')->name('admin.member.statusEdit');
     Route::get('chat_record', 'IndexController@chat_record')->name('admin.chat_record');
-    Route::get('role_show', 'RoleController@index')->name('role.show');
+
+
+    /**
+     * 权限
+     */
     Route::get('permission_show', 'PermissionController@index')->name('permission.show');
-    Route::get('admin_show', 'AdminController@index')->name('admin.show');
     Route::get('permission-add-show', 'PermissionController@permissionAddShow')->name('permission.add_show');
+    Route::post('permission-add-post', 'PermissionController@permissionAddPost')->name('permission.add_post');
+    Route::post('permission-delete-post', 'PermissionController@permissionDelete')->name('permission.delete');
+    Route::get('permission-edit-show/{id}', 'PermissionController@permissionEditShow')->name('permission.edit_show');
+    Route::post('permission-edit-post', 'PermissionController@permissionEditPost')->name('permission.edit_post');
+
+
+    /**
+     * 角色管理
+     */
+    Route::get('role_show', 'RoleController@index')->name('role.show');
+    Route::get('role-add-show', 'RoleController@addShow')->name('role.add_show');
+    Route::post('role-add-post', 'RoleController@roleAddPost')->name('role.add_post');
+    Route::get('role-edit-show/{id}', 'RoleController@roleEditShow')->name('role.edit_show');
+    Route::post('role-edit-post', 'RoleController@roleEditPost')->name('role.edit_post');
+    Route::post('role-delete', 'RoleController@roleDelete')->name('role.delete');
+
+    /**
+     * 管理员管理
+     */
+    Route::get('admin-show', 'AdminController@index')->name('admin.show');
+    Route::get('admin-add-show', 'AdminController@addShow')->name('admin.add_show');
+    Route::post('admin-add-post', 'AdminController@addPost')->name('admin.add_post');
+    Route::get('admin-edit-show', 'AdminController@editShow')->name('admin.edit_show');
+    Route::post('admin-edit-post', 'AdminController@editPost')->name('admin.edit_post');
+    Route::get('admin-change-password-show', 'AdminController@changePasswordShow')->name('admin.change_show');
+    Route::post('admin-change-password-post', 'AdminController@changePasswordPost')->name('admin.change_password_post');
+    Route::post('admin-disable/{id}','AdminController@userStatusDisable')->name('admin.user_status_disable');
+    Route::post('admin-enable/{id}', 'AdminController@userStatusEnable')->name('admin.user_status_enable');
+    Route::post('admin-delete/{id}', 'AdminController@delete')->name('admin.delete');
+
 
     Route::get('test', function (\App\Repository\Chat\Member $member)
     {

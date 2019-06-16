@@ -13,10 +13,10 @@ class CreateUserAbleTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_able', function (Blueprint $table) {
-            $table->integer('id');
-            $table->integer('user_able_id');
-            $table->string('user_able_type');
+        Schema::create('userables', function (Blueprint $table) {
+            $table->integer('user_id');
+            $table->integer('userable_id');
+            $table->string('userable_type');
 
         });
     }

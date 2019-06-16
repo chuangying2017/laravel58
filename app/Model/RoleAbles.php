@@ -11,7 +11,9 @@ class RoleAbles extends Pivot
 
     protected $table = 'role_able';
 
-   public function permission()
+    protected $foreignKey = 'id';
+
+    public function permission()
    {
        return $this->morphedByMany(PermissionModel::class,'role_able','role_able');
    }

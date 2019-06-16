@@ -10,7 +10,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
-
+    const STATUS_ACTIVE = 'active';
+    const STATUS_FORBIDDEN = 'forbidden';
+    const STATUS_DELETE = 'delete';
     /**
      * The attributes that are mass assignable.
      *
@@ -40,6 +42,6 @@ class User extends Authenticatable
 
     public function role()
     {
-        return $this->morphedByMany(RoleModel::class,'user_able');
+        return $this->morphedByMany(RoleModel::class,'userable','userables');
     }
 }

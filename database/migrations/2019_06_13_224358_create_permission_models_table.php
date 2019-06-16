@@ -17,7 +17,7 @@ class CreatePermissionModelsTable extends Migration
             $table->bigIncrements('id');
             $table->string('action')->nullable();
             $table->string('name');
-            $table->string('style');
+            $table->string('style')->nullable();
             $table->integer('pid')->default(0);
             $table->string('path')->default(0);
             $table->softDeletes();

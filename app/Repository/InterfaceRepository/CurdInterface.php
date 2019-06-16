@@ -7,9 +7,9 @@ interface CurdInterface
 {
     public function create(array $array):array ;
 
-    public function delete():bool ;
+    public function delete($id):bool ;
 
-    public function update():bool ;
+    public function update($id,$data):bool ;
 
     public function select();
 

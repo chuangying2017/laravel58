@@ -125,17 +125,31 @@ ul {
 }
 
 .online_avatar {
+    position: relative;
     float: left;
-    overflow: hidden;
-    border-radius: 5px;
+    /*overflow: hidden;*/
     background: #ccc
 }
-
 .online_avatar, .online_avatar img {
     width: 25px;
-    height: 25px
+    height: 25px;
+    border-radius: 5px;
 }
-
+.online_avatar .news_note{
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    min-width: 15px;
+    height: 15px;
+    line-height: 15px;
+    padding: 0 3px;
+    background-color: red;
+    color: #fff;
+    font-size: 10px;
+    font-style: normal;
+    border-radius: 7px;
+    text-align: center;
+}
 .online_username {
     overflow: hidden;
     color: #333;
@@ -291,7 +305,8 @@ ul {
 .windows_input .toolbar {
     width: 100%;
     height: 43px;
-    border-top: 1px solid #e7e7e7
+    /*border-top: 1px solid #e7e7e7*/
+    background-color: #fff;
 }
 
 .windows_input .toolbar .left {
@@ -304,18 +319,25 @@ ul {
 }
 
 .windows_input .toolbar .send {
-    width: 120px;
-    height: 44px;
+    /*width: 120px;
+    height: 44px;*/
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 12px;
     background: #ddd;
     color: #333;
     text-align: center;
-    font-weight: 700;
+    /*font-weight: 700;*/
     font-size: 14px;
-    line-height: 44px;
     padding: 0;
     border: 0;
     transition-duration: 0.4s;
     border-radius: 4px;
+}
+.windows_input .toolbar .send.sendBtn{
+    background-color: #fff;
+    border:1px solid #ddd;
 }
 
 .windows_input .toolbar .send:hover {

@@ -27,7 +27,7 @@ class MemberController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
@@ -80,7 +80,7 @@ class MemberController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
