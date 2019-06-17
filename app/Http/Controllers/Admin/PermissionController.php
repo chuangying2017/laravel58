@@ -28,7 +28,7 @@ class PermissionController extends Controller
 
     public function permissionAddPost(Request $request)
     {
-        $result = $this->RepositoryPermission->create($request->except('_token'));
+        $result = $this->RepositoryPermission->create($request->post());
 
         return response()->json($result);
     }

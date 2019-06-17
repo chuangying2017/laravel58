@@ -14,6 +14,9 @@ class PermissionRepository implements CurdInterface
     public function create(array $array): array
     {
         $permission = PermissionModel::query();
+        $array = Arr::only($array,[
+            'pid','name','style','action','path'
+        ]);
         if ($array['pid'] <=0 )
         {
             $result = $permission->create($array);
