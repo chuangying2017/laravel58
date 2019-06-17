@@ -37,7 +37,8 @@
                 <div class="online_list_header">车上乘客</div>
                 <div class="online_item" v-on:click="freed(user.username)" v-for="user in roomUser">
                     <template v-if="user">
-                        <div  class="online_avatar">
+                        <div class="online_avatar">
+                            <i class="news_note">99+</i>
                             <img :src="user.avatar" alt="">
                         </div>
                         <div class="online_status">
@@ -116,7 +117,7 @@
                     </div>
                     <div class="right">
                         <button class="send" @click="clearContent">清空消息</button>
-                        <button class="send" @click="clickBtnSend">发送消息</button>
+                        <button class="send sendBtn" @click="clickBtnSend">发送消息</button>
                     </div>
                 </div>
             </div>
@@ -444,7 +445,7 @@
                 });
             },
             freed: function(fe){
-                //console.log(fe);
+                console.log(fe);
                 this.roomChat = [];
                 console.log(this.userData[fe]);
                 for (let i in this.userData[fe])
