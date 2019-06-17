@@ -19,9 +19,9 @@ Route::get('/', function(){
 
 Route::get('/testPhp', function ()
 {
-    $arr = [2,78,988,99,22,555,6];
+    $arr = [[2,78,988,99,22,555,6], [3,78,988,99,22,555,6], [4,78,988,99,22,555,6]];
 
-    dd(collect($arr)->min());
+    dd(collect($arr)->random());
 });
 
 Route::post('push/welcome', 'Caiji\ApiCommandController@pullGithub');
@@ -91,12 +91,22 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
     Route::post('admin-enable/{id}', 'AdminController@userStatusEnable')->name('admin.user_status_enable');
     Route::post('admin-delete/{id}', 'AdminController@delete')->name('admin.delete');
 
+    /**
+     * 二维码地址
+     */
+    Route::get('admin-qrcode-show', 'IndexController@qrcode')->name('admin.qrcode_show');
+
 
     Route::get('test', function (\App\Repository\Chat\Member $member)
     {
         dd($member->memberTest());
     });
 });
+
+/**
+ * 解密 url address
+ */
+Route::get('qrcode/parse_address/{string}', 'RedirectController@qrcodeDecode')->name('parse.url');
 
 Auth::routes();
 

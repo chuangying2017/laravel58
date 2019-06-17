@@ -44,7 +44,7 @@
                                 <div class="am-comment-main">
                                     <header class="am-comment-hd">
                                         <div class="am-comment-meta">
-                                            <a href="#link-to-user" class="am-comment-author">@{{chat.username}}</a>
+                                            <a href="#link-to-user" class="am-comment-author">@{{chat.number}}</a>
                                         </div>
                                     </header>
                                     <div class="am-comment-bd">
@@ -101,7 +101,7 @@
             ReconnectTimer   : null,
             HeartBeatTimer   : null,
             ReconnectBox     : null,
-            currentUser      : {username: '-----', intro: '-----------', fd: 0, avatar: 0},
+            currentUser      : {number: '{{$client['number']}}', intro: '{{$client['intro']}}', fd: 0, avatar: '{{$client['avatar']}}'},
             roomUser         : {},
             roomChat         : [],
             up_recv_time     : 0,
@@ -149,7 +149,7 @@
                 var reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = function (e) {
-                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.customer_number,othis.currentUser.username)
+                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.customer_number,othis.currentUser.number)
                 }
             }
         },
@@ -157,12 +157,12 @@
             connect              : function () {
                 var othis = this;
                 //设置本地客户端的昵称
-                var username = localStorage.getItem('username');
+                var number = localStorage.getItem('number');
                 var websocketServer = this.websocketServer;
-                if (username) {
-                    websocketServer += '?username=' + encodeURIComponent(username)
+                if (number) {
+                    websocketServer += '?number=' + encodeURIComponent(number)
                 }
-                console.log(username)
+                console.log(number)
                 this.websocketInstance = new WebSocket(websocketServer);
                 this.websocketInstance.onopen = function (ev) {
                     // 断线重连处理
@@ -176,7 +176,7 @@
                         othis.websocketInstance.send('PING');
                     }, 1000 * 30);
                     // 请求获取自己的用户信息和在线列表
-                    othis.release('index', 'info');
+                     othis.release('client', 'info', {'client':{'avatar':'{{$client['avatar']}}', 'number': '{{$client['number']}}'},'customer': {'customer_id': '{{$customer['id']}}','number': '{{$customer['number']}}'}});
                    // othis.release('index', 'online');
                     othis.websocketInstance.onmessage = function (ev) {
                         try {
@@ -197,11 +197,11 @@
                                         type    : data.type ? data.type : 'text',
                                         fd      : 0,
                                         content : data.content,
-                                        avatar  : 'https://www.gravatar.com/avatar/3ee60266a353746d6aab772fb9e2d398?s=200&d=identicon',
-                                        username: data.username
+                                        avatar  : '{{$customer['avatar']}}',
+                                        number: data.number
                                     });
                                     othis.customer_id = data.customer_id; //第一次进来选择客服的Id
-                                    othis.customer_number = data.username; //客服编号
+                                    othis.customer_number = data.number; //客服编号
                                     break;
                                 }
                                 case 103 : {
@@ -211,7 +211,7 @@
                                         fd      : data.fromUserFd,
                                         content : data.content,
                                         avatar  : data.avatar,
-                                        username: data.username,
+                                        number: data.number,
                                         sendTime: data.sendTime
                                     };
                                     othis.roomChat.push(broadcastMsg);
@@ -224,7 +224,7 @@
                                         fd      : data.fromUserFd,
                                         content : data.content,
                                         avatar  : data.avatar,
-                                        username: data.username,
+                                        number: data.number,
                                         sendTime: data.sendTime
                                     };
                                     othis.roomChat.push(lastMsg);
@@ -235,7 +235,7 @@
                                     othis.currentUser.intro = data.intro;
                                     othis.currentUser.avatar = data.avatar;
                                     othis.currentUser.fd = data.fd;
-                                    othis.currentUser.username = data.username;
+                                    othis.currentUser.number = data.number;
                                     break;
                                 }
                                 case 202: {
@@ -248,17 +248,17 @@
                                     othis.$set(othis.roomUser, 'user' + data.info.fd, data.info);
                                  /*   othis.roomChat.push({
                                         type   : 'tips',
-                                        content: '欢迎 ' + data.info.username + ' 加入群聊',
+                                        content: '欢迎 ' + data.info.number + ' 加入群聊',
                                     });*/
                                     break;
                                 }
                                 case 204: {
                                     // 用户已离线
-                                    var username = othis.roomUser['user' + data.userFd].username;
+                                    var number = othis.roomUser['user' + data.userFd].number;
                                     othis.$delete(othis.roomUser, 'user' + data.userFd);
                                     othis.roomChat.push({
                                         type   : 'tips',
-                                        content: ' ' + username + ' 离开了群聊',
+                                        content: ' ' + number + ' 离开了群聊',
                                     });
                                     break;
                                 }
@@ -306,22 +306,22 @@
              * 发送文本消息
              * @param content 发送主题
              * @param fd 要发送的用户
-             * @param username 客服编号
+             * @param number 客服编号
              * @param masterId 聊天组的id
              */
-            broadcastTextMessage : function (content,fd,username,masterId) {
+            broadcastTextMessage : function (content,fd,number,masterId) {
                 console.log(fd,'send user fd_id');
-                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: fd,username:username,masterId:masterId})
+                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: fd,number:number,masterId:masterId})
             },
             /**
              * 发送图片消息
              * @param base64_content
              * @param fd 要发送的用户
-             * @param username 客服编号
+             * @param number 客服编号
              * @param masterId 聊天组的id
              */
-            broadcastImageMessage: function (base64_content,fd,username,masterId) {
-                this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,username:username,masterId:masterId})
+            broadcastImageMessage: function (base64_content,fd,number,masterId) {
+                this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,number:number,masterId:masterId})
             },
             picture              : function () {
                 var input = document.getElementById("fileInput");
@@ -336,7 +336,7 @@
                 var content = textInput.val();
                 if (content.trim() !== '') {
                     if (this.websocketInstance && this.websocketInstance.readyState === 1) {
-                        this.broadcastTextMessage(content,this.customer_id,this.customer_number,this.currentUser.username);
+                        this.broadcastTextMessage(content,this.customer_id,this.customer_number,this.currentUser.number);
                         textInput.val('');
                     } else {
                         layer.tips('连接已断开', '.windows_input', {
@@ -352,9 +352,9 @@
                 }
             },
             changeName           : function () {
-                layer.prompt({title: '拒绝吃瓜，秀出你的昵称', formType: 0}, function (username, index) {
-                    if (username) {
-                        localStorage.setItem('username', username);
+                layer.prompt({title: '拒绝吃瓜，秀出你的昵称', formType: 0}, function (number, index) {
+                    if (number) {
+                        localStorage.setItem('number', number);
                         window.location.reload();
                     }
                     layer.close(index);

@@ -6,11 +6,11 @@
     <div class="alert alert-success" role="alert" style="z-index: 999">
         　　　　{{session('tip')}}
     </div>
-    <script>
+  {{--  <script>
         setInterval(function(){
             $('.alert').remove();
         },3000);
-    </script>
+    </script>--}}
 @endif
 
 

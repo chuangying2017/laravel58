@@ -90,3 +90,61 @@ if (!function_exists('status')) {
         return $res;
     }
 }
+if (!function_exists('get_host'))
+{
+    function get_host():string
+    {
+        $scheme = empty($_SERVER['HTTPS']) ? 'http://' : 'https://';
+        $url = $scheme.$_SERVER['HTTP_HOST'];
+        return $url;
+    }
+}
+
+if (!function_exists('character'))
+{
+    /**
+     * 生成随机字符串 可用于生成随机密码等
+     * @param int    $length   生成长度
+     * @param string $alphabet 自定义生成字符集
+     * @author : evalor <master@evalor.cn>
+     * @return bool|string
+     */
+    function character($length = 6, $alphabet = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789')
+    {
+        /*
+         * mt_srand() is to fix:
+            mt_rand(0,100);
+            if(pcntl_fork()){
+                var_dump(mt_rand(0,100));
+            }else{
+                var_dump(mt_rand(0,100));
+            }
+         */
+        mt_srand();
+        // 重复字母表以防止生成长度溢出字母表长度
+        if ($length >= strlen($alphabet)) {
+            $rate = intval($length / strlen($alphabet)) + 1;
+            $alphabet = str_repeat($alphabet, $rate);
+        }
+
+        // 打乱顺序返回
+        return substr(str_shuffle($alphabet), 0, $length);
+    }
+}
+
+
+if (!function_exists('makeGravatar'))
+{
+    /**
+     * 生成一个Gravatar头像
+     * @param string $email
+     * @param int $size
+     * @return string
+     */
+    function makeGravatar(string $email, int $size = 120)
+{
+    $hash = md5($email);
+    return "https://www.gravatar.com/avatar/{$hash}?s={$size}&d=identicon";
+}
+}
+

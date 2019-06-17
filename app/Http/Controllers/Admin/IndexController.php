@@ -101,4 +101,10 @@ class IndexController extends Controller
             'search_username' => $all['search_username'] ?? null
             ]);
     }
+
+    public function qrcode(Request $request)
+    {
+        $user = $request->user();
+        return view('admin.qrcode',['url' => config('app.qrcode_generate') . route('parse.url', ['string' => encrypt(['user_id' => $user->id, 'name' => $user->name])])]);
+    }
 }

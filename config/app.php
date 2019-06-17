@@ -228,5 +228,5 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
-
+    'qrcode_generate' => 'http://qr.liantu.com/api.php?text='
 ];

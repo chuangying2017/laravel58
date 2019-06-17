@@ -35,14 +35,14 @@
             </div>
             <div class="online_list">
                 <div class="online_list_header">车上乘客</div>
-                <div class="online_item" v-on:click="freed(user.username)" v-for="user in roomUser">
+                <div class="online_item" v-on:click="freed(user.number)" v-for="user in roomUser">
                     <template v-if="user">
                         <div class="online_avatar">
                             <i class="news_note">99+</i>
                             <img :src="user.avatar" alt="">
                         </div>
                         <div class="online_status">
-                            <div class="online_username">@{{user.username}}</div>
+                            <div class="online_username">@{{user.number}}</div>
                         </div>
                     </template>
                 </div>
@@ -78,7 +78,7 @@
                                 <div class="am-comment-main">
                                     <header class="am-comment-hd">
                                         <div class="am-comment-meta">
-                                            <a href="#link-to-user" class="am-comment-author">@{{chat.username}}</a>
+                                            <a href="#link-to-user" class="am-comment-author">@{{chat.number}}</a>
                                         </div>
                                     </header>
                                     <div class="am-comment-bd">
@@ -135,7 +135,7 @@
             ReconnectTimer   : null,
             HeartBeatTimer   : null,
             ReconnectBox     : null,
-            currentUser      : {username: '{{$user->number}}', intro: '-----------', fd: 0, avatar: 0},
+            currentUser      : {number: '{{$user->number}}', intro: '-----------', fd: 0, avatar: 0},
             roomUser         : {},
             roomChat         : [],
             up_recv_time     : 0,
@@ -193,10 +193,10 @@
             connect              : function () {
                 var othis = this;
                 //设置本地客户端的昵称
-                var username = localStorage.getItem('username');
+                var number = localStorage.getItem('number');
                 var websocketServer = this.websocketServer;
-                if (username) {
-                    websocketServer += '?username=' + encodeURIComponent(username)
+                if (number) {
+                    websocketServer += '?number=' + encodeURIComponent(number)
                 }
                 this.websocketInstance = new WebSocket(websocketServer);
                 this.websocketInstance.onopen = function (ev) {
@@ -213,7 +213,7 @@
                     // 请求获取自己的用户信息和在线列表
                     var cus = {};
                     cus.customer_id = othis.customer_id;
-                    cus.username = othis.currentUser.username;
+                    cus.number = othis.currentUser.number;
                     othis.release('index', 'info',cus); //插入在线列表
                    // othis.release('index', 'online');
                     othis.websocketInstance.onmessage = function (ev) {
@@ -236,7 +236,7 @@
                                         fd      : 0,
                                         content : data.content,
                                         avatar  : 'https://www.gravatar.com/avatar/3ee60266a353746d6aab772fb9e2d398?s=200&d=identicon',
-                                        username: data.username
+                                        number: data.number
                                     });
                                     break;
                                 }
@@ -249,7 +249,7 @@
                                         fd      : data.fromUserFd,
                                         content : data.content,
                                         avatar  : data.avatar,
-                                        username: data.username,
+                                        number: data.number,
                                         sendTime: data.sendTime
                                     };
 
@@ -261,9 +261,9 @@
 
                                     if (typeof(othis.roomUser['user'+ data.fromUserFd]) == "undefined")
                                     {
-                                        if (data.username != othis.currentUser.username)
+                                        if (data.number != othis.currentUser.number)
                                         {
-                                            othis.roomUser['user'+ data.fromUserFd] = {avatar:data.avatar, username:data.username};
+                                            othis.roomUser['user'+ data.fromUserFd] = {avatar:data.avatar, number:data.number};
                                         }
                                     }
 
@@ -271,8 +271,8 @@
 
                                     othis.AllFd['user' + data.fromUserFd] = data.fromUserFd;
                                     //当发送的用户 等于 当前聊天窗口的用户 马上推送到当前聊天窗口
-                                    var arr = [othis.chatCurrent_number,othis.currentUser.username];
-                                    if (arr.includes(data.username))
+                                    var arr = [othis.chatCurrent_number,othis.currentUser.number];
+                                    if (arr.includes(data.number))
                                     {
                                         othis.roomChat.push(broadcastMsg);
                                     }else{
@@ -288,7 +288,7 @@
                                         fd      : data.fromUserFd,
                                         content : data.content,
                                         avatar  : data.avatar,
-                                        username: data.username,
+                                        number: data.number,
                                         sendTime: data.sendTime
                                     };
                                     othis.roomChat.push(lastMsg);
@@ -299,7 +299,7 @@
                                     othis.currentUser.intro = data.intro;
                                     othis.currentUser.avatar = data.avatar;
                                     othis.currentUser.fd = data.fd;
-                                    othis.currentUser.username = data.username;
+                                    othis.currentUser.number = data.number;
                                     break;
                                 }
                                 case 202: {
@@ -312,17 +312,17 @@
                                     othis.$set(othis.roomUser, 'user' + data.info.fd, data.info);
                                    /* othis.roomChat.push({
                                         type   : 'tips',
-                                        content: '欢迎 ' + data.info.username + ' 加入群聊',
+                                        content: '欢迎 ' + data.info.number + ' 加入群聊',
                                     });*/
                                     break;
                                 }
                                 case 204: {
                                     // 用户已离线
-                                    var username = othis.roomUser['user' + data.userFd].username;
+                                    var number = othis.roomUser['user' + data.userFd].number;
                                     othis.$delete(othis.roomUser, 'user' + data.userFd);
                                     othis.roomChat.push({
                                         type   : 'tips',
-                                        content: ' ' + username + ' 离开了',
+                                        content: ' ' + number + ' 离开了',
                                     });
                                     break;
                                 }
@@ -370,24 +370,24 @@
              * 发送文本消息
              * @param content
              * @param fd 客服id
-             * @param username 客户号
+             * @param number 客户号
              */
-            broadcastTextMessage : function (content,fd,username) {
-                console.log('send text', fd , username)
+            broadcastTextMessage : function (content,fd,number) {
+                console.log('send text', fd , number)
                 this.release('Customer', 'sendPersonal',
-                    {content: content, type: 'text',toUserFd:fd,username:username,masterId:username,mode:'customer'}
+                    {content: content, type: 'text',toUserFd:fd,number:number,masterId:number,mode:'customer'}
                     )
             },
             /**
              * 发送图片消息
              * @param base64_content
              * @param fd 客服id
-             * @param username 客户号
+             * @param number 客户号
              */
-            broadcastImageMessage: function (base64_content,fd,username) {
-                console.log('send image', fd , username)
+            broadcastImageMessage: function (base64_content,fd,number) {
+                console.log('send image', fd , number)
                 this.release('Customer', 'sendPersonal',
-                    {content: base64_content, type: 'image',toUserFd:fd,username:username,masterId:username,mode:'customer'}
+                    {content: base64_content, type: 'image',toUserFd:fd,number:number,masterId:number,mode:'customer'}
                     )
             },
             picture              : function () {
@@ -427,9 +427,9 @@
                 }
             },
             changeName           : function () {
-                layer.prompt({title: '拒绝吃瓜，秀出你的昵称', formType: 0}, function (username, index) {
-                    if (username) {
-                        localStorage.setItem('username', username);
+                layer.prompt({title: '拒绝吃瓜，秀出你的昵称', formType: 0}, function (number, index) {
+                    if (number) {
+                        localStorage.setItem('number', number);
                         window.location.reload();
                     }
                     layer.close(index);
