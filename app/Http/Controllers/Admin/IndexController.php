@@ -71,7 +71,7 @@ class IndexController extends Controller
 
     public function member_list(Member $member)
     {
-        return view('admin.member_list', ['member' => $member->select()]);
+        return view('admin.member_list', ['member' => $member->select(request()->user()->id)]);
     }
 
     public function member_add()

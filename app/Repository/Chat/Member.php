@@ -13,6 +13,7 @@ use App\Model\Customer;
 use App\Model\ModelConfig;
 use App\Model\SessionRecord;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Lang;
 
 class Member
 {
@@ -26,17 +27,34 @@ class Member
     public function save($data):array
     {
 
+        $user = request()->user();
+
+        if ($user->nowCustomerNum >= $user->customerNum)
+        {
+            return ['status' => 2, 'msg' => Lang::get('defineError.customer_num_too_many')];
+        }
+
         $data['password'] = base64_encode($data['password']);
         $cus = $this->customer->fill($data);
         $bool = $cus->save();
         $cus->number = 'KF000' . random_int(000,999) . $cus -> id;
+        $cus->manger_id = $user->id;
         $cus->save();
+        $user->nowCustomerNum += 1;
+        $user->save();
         return $bool ? ['status'=>1,'msg'=>'操作成功'] : ['status'=>2, 'msg'=>'操作失败001'];
     }
 
-    public function select()
+    public function select($manger_id = 0)
     {
-        return $this->customer->paginate(20);
+        $customer = $this->customer;
+
+        if ($manger_id)
+        {
+            $customer->where('manger_id', '=', $manger_id);
+        }
+
+        return $customer->paginate(20);
     }
 
     public function edit($id,$data)
@@ -65,7 +83,25 @@ class Member
         {
             $id = explode(',',$id);
         }*/
-        return ModelConfig::status($this->customer::destroy($id));
+       if (is_array($id))
+       {
+            $find = $this->customer::get($id);
+
+            foreach ($find as $k => $v)
+            {
+                $v->user()->decrement('nowCustomerNum');
+                $v->delete();
+            }
+            $res = true;
+       }else{
+           $find = $this->customer::find($id);
+
+           $find->user()->decrement('nowCustomerNum');
+
+           $res = $find->delete();
+       }
+
+        return ModelConfig::status($res);
     }
 
     public function chat_get($condition = null)

@@ -13,6 +13,8 @@ class Customer extends Model
 
     protected $guarded = ['id'];
 
+    protected $foreignKey = 'manger_id';
+
     //
     public function session_record()
     {
@@ -22,5 +24,10 @@ class Customer extends Model
     public function scopeStatus($query)
     {
         return $query->where('status','active');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,$this->foreignKey);
     }
 }

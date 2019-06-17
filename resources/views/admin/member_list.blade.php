@@ -38,8 +38,8 @@
             <tbody>
             @foreach($member as $k => $v)
                 <tr class="text-c">
-                    <td><input type="checkbox" value="{{$k}}" name="power"></td>
-                    <td>{{$v['id']}}</td>
+                    <td><input type="checkbox" value="{{$v['id']}}" name="power"></td>
+                    <td>{{$k + 1}}</td>
                     <td><u class="text-primary" >{{$v['username']}}</u></td>
                     <td>{{$v['number']}}</td>
                     <td>{{$v['created_at']}}</td>

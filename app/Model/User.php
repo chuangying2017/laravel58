@@ -44,4 +44,9 @@ class User extends Authenticatable
     {
         return $this->morphedByMany(RoleModel::class,'userable','userables');
     }
+
+    public function customer()
+    {
+        return $this->hasMany(Customer::class,'manger_id','id');
+    }
 }
