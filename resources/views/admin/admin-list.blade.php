@@ -92,11 +92,11 @@ function admin_add(title,url,w,h){
 	layer_show(title,url,w,h);
 }
 /*管理员-删除*/
-function admin_del(obj,id){
+function admin_del(obj,url){
 	layer.confirm('确认要删除吗？',function(index){
 		$.ajax({
 			type: 'POST',
-			url: '',
+			url: url,
 			dataType: 'json',
 			success: function(data){
 				$(obj).parents("tr").remove();
