@@ -105,6 +105,7 @@ class IndexController extends Controller
     public function qrcode(Request $request)
     {
         $user = $request->user();
-        return view('admin.qrcode',['url' => config('app.qrcode_generate') . route('parse.url', ['string' => encrypt(['user_id' => $user->id, 'name' => $user->name])])]);
+        $route_address = route('parse.url', ['string' => encrypt(['user_id' => $user->id, 'name' => $user->name])]);
+        return view('admin.qrcode',['url' => config('app.qrcode_generate') . $route_address, 'location' => $route_address]);
     }
 }

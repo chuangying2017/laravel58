@@ -1,2 +1,2 @@
-<input type="text" value="{{$url}}" />
+<input type="text" value="{{$location}}" />
 <img src="{{$url}}" alt=""/>
