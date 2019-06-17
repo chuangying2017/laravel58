@@ -9,6 +9,6 @@ class RedirectController extends Controller
 
     public function index()
     {
-        return view('point.redirect_alert');
+        return view('point.redirect_alert', ['arr' => \request()->all()]);
     }
 }

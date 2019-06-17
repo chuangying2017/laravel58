@@ -12,3 +12,10 @@
         },3000);
     </script>
 @endif
+
+
+@if (isset($arr['url']))
+    <script type="application/javascript">
+        window.location.href = '{{route('logout')}}'
+    </script>
+@endif

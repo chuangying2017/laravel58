@@ -19,8 +19,15 @@ class IndexController extends Controller
 
     public function index(Request $request)
     {
-        $res = $request->user()->role->first()->permission()->get();
-        //$res = $this->permissionRepository->get();
+
+        $role = $request->user()->role->first();
+
+        if (!$role)
+        {
+           return redirect(route('admin.alert_message',['url'=>route('logout'),'tip'=>"角色不存在"]))->with('tip','角色不存在');
+        }
+
+        $res = $role->permission()->get();
 
         $arr = [];
 
