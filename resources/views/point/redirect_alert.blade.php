@@ -15,7 +15,14 @@
 
 
 @if (isset($arr['url']))
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+
     <script type="application/javascript">
-        window.location.href = '{{route('logout')}}'
+        setInterval(function(){
+            document.getElementById('logout-form').submit();
+        },3000);
     </script>
 @endif
