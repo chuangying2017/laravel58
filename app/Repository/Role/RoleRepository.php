@@ -17,7 +17,11 @@ class RoleRepository implements CurdInterface
         $arr = collect($array)->except('roleName','description');
 
         $res =  $arr->values()->toArray();
-
+        $find = RoleModel::query()->where('name',$array['roleName'])->first();
+        if (!empty($find))
+        {
+            return ['status' => 2,'msg' => '角色名不能重复!'];
+        }
         try{
             DB::beginTransaction();
 
