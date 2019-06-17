@@ -116,11 +116,15 @@ $(function(){
 			$(form).ajaxSubmit({
 				type: 'post',
 				url: "{{route('admin.add_post')}}" ,
+                async:false,
 				success: function(data){
-				    console.log(data)
+				    console.log(data);
                     if (data.status == 1)
                     {
                         layer.msg('添加成功!',{icon:1,time:1000});
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.$('.btn-refresh').click();
+                        parent.layer.close(index);
                     }else{
 
                         layer.msg('添加失败!', {icon:2, time:1000});
@@ -131,9 +135,7 @@ $(function(){
 					layer.msg('error!',{icon:1,time:1000});
 				}
 			});
-			var index = parent.layer.getFrameIndex(window.name);
-			parent.$('.btn-refresh').click();
-			parent.layer.close(index);
+
 		}
 	});
 });

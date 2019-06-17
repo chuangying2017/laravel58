@@ -157,13 +157,13 @@
                     async:false,
                     success: function(data){
                         if(data.status == 1){
-                            layer.msg(data.msg, {icon: 1, time: 2000},function (){
+                            layer.msg(data.msg, {icon: 1, time: 1000},function (){
                                 var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                                 parent.location.reload();
                                 parent.layer.close(index);
                             })
                         }else{
-                            layer.msg(data.msg, {icon: 2, time: 2000},function (){
+                            layer.msg(data.msg, {icon: 2, time: 1500},function (){
                                 var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                                 parent.location.reload();
                                 parent.layer.close(index);

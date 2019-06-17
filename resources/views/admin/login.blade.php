@@ -22,29 +22,20 @@
 <div class="header"></div>
 <div class="loginWraper">
     <div id="loginform" class="loginBox">
-        <form class="form form-horizontal" action="{{route('login')}}" method="post">
+        <form class="form form-horizontal" id="form-change-login">
             @csrf
             <div class="row cl">
                 <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
                 <div class="formControls col-xs-8">
                     <input id="" name="name" type="text" placeholder="账户" class="input-text size-L">
                     <br/>
-                    @error('name')
-                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                    @enderror
                 </div>
             </div>
             <div class="row cl">
                 <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
                 <div class="formControls col-xs-8">
                     <input id="" name="password" type="password" placeholder="密码" class="input-text size-L">
-                    @error('password')
-                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                    @enderror
+
                 </div>
             </div>
           {{--  <div class="row cl">
@@ -72,3 +63,49 @@
 <div class="footer">Copyright by admin</div>
 </body>
 </html>
+@include('public.footer')
+@include('public.commonjs')
+<script type="application/javascript">
+    $(function(){
+        $("#form-change-login").validate({
+            rules:{
+                name:{
+                    required:true,
+                    minlength:6,
+                    maxlength:160
+                },
+                password: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 30
+                }
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                var url = '{{route('login')}}';
+                $(form).ajaxSubmit({
+                    type: 'post',
+                    url:url,
+                    async:false,
+                    success: function(data){
+                        console.log(data);
+                        if(data.status == 1){
+                            layer.msg(data.msg, {icon: 1, time: 1000},function (){
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index);
+                                window.location.href = data.url;
+                            })
+                        }else{
+                            layer.msg(data.msg, {icon: 2, time: 1500},function (){
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index);
+                            })
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

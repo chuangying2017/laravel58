@@ -18,7 +18,7 @@ class CheckRoleMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $user = $request->user();
+/*        $user = $request->user();
 
         $role = $user->role->first();
 
@@ -39,7 +39,7 @@ class CheckRoleMiddleware
        if (!$res)
        {
            return redirect()->route('admin.alert_message')->with('tip','权限不足');
-       }
+       }*/
 
 
 

@@ -12,14 +12,12 @@ return [
     | these language lines according to your application's requirements.
     |
     */
-    /*
-     * 'failed' => 'These credentials do not match our records.',
-     *
-     * 'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-     *
-     * */
 
-    'failed' => '账号或密码错误',
-    'throttle' => '登录尝试次数过多，请稍后尝试',
+    'failed' => '这些凭证不符合我们的要求。',
+    'throttle' => '频繁的登录！ 请在 :seconds 秒后在试。',
+    'forbidden' => '当前用户被禁用',
+    'delete' => '已经删除',
+    'success' => '登录成功过',
+    'status_fail' => '无状态登录失败'
 
 ];

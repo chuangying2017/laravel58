@@ -17,9 +17,10 @@ class IndexController extends Controller
         $this->permissionRepository = $permissionRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $res = $this->permissionRepository->get();
+        $res = $request->user()->role->first()->permission()->get();
+        //$res = $this->permissionRepository->get();
 
         $arr = [];
 
