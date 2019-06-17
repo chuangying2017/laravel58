@@ -110,7 +110,9 @@ class Member
 
         $query = call_select($query,$condition);
 
-        return $query->has('customer')->with('customer:id,username,number')->orderBy('created_at','desc')->paginate(20);
+        return $query->whereHas('customer.user', function($query){
+            $query->where('id',request()->user()->id);
+        })->with('customer:id,username,number')->orderBy('created_at','desc')->paginate(20);
     }
 
     public function array_each($data)
