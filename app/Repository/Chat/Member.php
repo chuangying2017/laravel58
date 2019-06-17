@@ -51,7 +51,7 @@ class Member
 
         if ($manger_id)
         {
-            $customer->where('manger_id', '=', $manger_id);
+            $customer = $customer->where('manger_id', '=', $manger_id);
         }
 
         return $customer->paginate(20);
