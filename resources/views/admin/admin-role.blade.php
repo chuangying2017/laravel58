@@ -28,8 +28,13 @@
 				<td>{{$v['name']}}</td>
 				<td>
                     @foreach($v['user'] as $i => $j)
-                        <a href="javascript:;">{{$j['name']}}，</a></td>
+                        @if ($i >= 1)
+                            |<a href="javascript:;"> {{$j['name']}}</a>
+                            @else
+                            <a href="javascript:;">{{$j['name']}}</a>
+                        @endif
                     @endforeach
+                </td>
 				<td>{{$v['description']}}</td>
                 <td>{{$v['created_at']}}</td>
 				<td class="f-14"><a title="删除" href="javascript:;" onclick="admin_role_del(this,{{$v['id']}})" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
