@@ -2,15 +2,24 @@
 
 namespace App\Http\Controllers\Chat;
 
+use App\Repository\Chat\Member;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
+use Predis\Client;
 
 class IndexController extends Controller
 {
+    protected $member;
+
+    public function __construct(Member $member)
+    {
+        $this->member = $member;
+    }
+
     //客服登录的聊天系统
     public function chatShow(Request $request)
     {
@@ -42,7 +51,25 @@ class IndexController extends Controller
             }
             //生成客户类型
 
-            
+        /*    $ip = $request->ip();
+
+            $predis = new Client();
+
+            $string = $predis->get($ip);
+
+            if ($string)
+            {
+                $array = unserialize($string);
+            }else{
+                $number = 'KF_'.$random;
+                $avatar = makeGravatar($random. '@swoole.com');
+                $array = ['number' => $number, 'avatar' => $avatar,'intro' => '客服咨询'];
+                $predis->setex($ip,3600,serialize($array));
+            }
+
+            $arr['client'] = $array;*/
+
+
             if (!$request->cookie('number'))
             {
 
@@ -54,12 +81,13 @@ class IndexController extends Controller
                 $number = Cookie::get('number');
                 $avatar = Cookie::get('avatar');
             }
-            
+
             $arr['client'] = [
                 'avatar' => $avatar,
                 'number' =>$number,
                 'intro' => '客服咨询'
             ];
+
 
         }else{
 
@@ -68,5 +96,12 @@ class IndexController extends Controller
         }
 
         return view('chat.clientChat', $arr);
+    }
+
+    public function userUpdate(Request $request)
+    {
+        $res = $this->member->edit($request->get('id'),$request->only('name'));
+
+        return response()->json($res);
     }
 }

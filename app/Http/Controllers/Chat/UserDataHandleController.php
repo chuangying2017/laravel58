@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Chat;
 
 use App\Model\Customer;
 use App\Model\ModelConfig;
+use App\Model\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cookie;
@@ -19,6 +20,13 @@ class UserDataHandleController extends Controller
 
         if ($res)
         {
+            $status = $res->user()->first()->status;
+
+            if (in_array($status, [User::STATUS_DELETE,User::STATUS_FORBIDDEN]))
+            {
+                return ['status'=>'2','msg'=>'当前代理商被禁用'];
+            }
+
             if (in_array($res['status'],['inactive','discard']))
             {
                 return ['status'=>'2','msg'=>'当前客服为禁用状态'];
