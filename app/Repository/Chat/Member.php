@@ -14,6 +14,7 @@ use App\Model\ModelConfig;
 use App\Model\SessionRecord;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Session;
 
 class Member
 {
@@ -73,7 +74,11 @@ class Member
 
         $cus->fill($data);
 
-       return ModelConfig::status($cus->save());
+        $res = $cus->save();
+
+        Session::put('user',$cus);
+
+        return ModelConfig::status($res);
 
     }
 

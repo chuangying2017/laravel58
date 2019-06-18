@@ -43,7 +43,10 @@
                                 </a>
                                 <div class="am-comment-main">
                                     <header class="am-comment-hd">
-                                        <div class="am-comment-meta">
+                                        <div class="am-comment-meta" v-if="chat.name">
+                                            <a href="#link-to-user" class="am-comment-author">@{{chat.name}}</a>
+                                        </div>
+                                        <div class="am-comment-meta" v-else>
                                             <a href="#link-to-user" class="am-comment-author">@{{chat.number}}</a>
                                         </div>
                                     </header>
@@ -181,9 +184,9 @@
                          'customer': {
                              'customer_id': '{{$customer['id']}}',
                              'number': '{{$customer['number']}}',
-                             'avatar':'{{$customer['avatar']}}'
+                             'avatar':'{{$customer['avatar']}}',
+                             'name': '{{$customer['name']}}'
                          }});
-                   // othis.release('index', 'online');
                     othis.websocketInstance.onmessage = function (ev) {
                         try {
                             var data = JSON.parse(ev.data);
@@ -204,7 +207,8 @@
                                         fd      : 0,
                                         content : data.content,
                                         avatar  : '{{$customer['avatar']}}',
-                                        number: data.number
+                                        number: data.number,
+                                        name:data.name
                                     });
                                     othis.customer_id = data.customer_id; //第一次进来选择客服的Id
                                     othis.customer_number = data.number; //客服编号
@@ -218,7 +222,8 @@
                                         content : data.content,
                                         avatar  : data.avatar,
                                         number: data.number,
-                                        sendTime: data.sendTime
+                                        sendTime: data.sendTime,
+                                        name:data.name
                                     };
                                     othis.roomChat.push(broadcastMsg);
                                     break;

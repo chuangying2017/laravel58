@@ -24,9 +24,9 @@
                     </div>
                     <div class="me_status">
                         <div class="me_username">
-                            {{--<i class="am-icon am-icon-pencil" @click="changeName"></i> --}}
-                            编号:&nbsp;
-                            {{$user->number}}
+                            <i class="am-icon am-icon-pencil" @click="changeName"></i>
+                            昵称:&nbsp;
+                            @{{ currentUser.name }}
                         </div>
                         <div class="me_income">@{{currentUser.intro}}</div>
                     </div>
@@ -77,7 +77,10 @@
                                 </a>
                                 <div class="am-comment-main">
                                     <header class="am-comment-hd">
-                                        <div class="am-comment-meta">
+                                        <div class="am-comment-meta" v-if="chat.name">
+                                            <a href="#link-to-user" class="am-comment-author">@{{chat.name}}</a>
+                                        </div>
+                                        <div class="am-comment-meta" v-else>
                                             <a href="#link-to-user" class="am-comment-author">@{{chat.number}}</a>
                                         </div>
                                     </header>
@@ -125,6 +128,13 @@
     </template>
 </div>
 <script>
+    var nickname;
+
+        @if (!$user->name)
+            nickname = '{{$user->number}}';
+        @else
+            nickname = '{{$user->name}}';
+        @endif
 
     var Vm = new Vue({
         el        : '#chat',
@@ -135,14 +145,14 @@
             ReconnectTimer   : null,
             HeartBeatTimer   : null,
             ReconnectBox     : null,
-            currentUser      : {number: '{{$user->number}}', intro: '-----------', fd: 0, avatar: 0},
+            currentUser      : {number: '{{$user->number}}', intro: '-----------', fd: 0, avatar: 0,name:nickname},
             roomUser         : {},
             roomChat         : [],
             up_recv_time     : 0,
             userData: {}, //存储所有的用户数据
             AllFd: {},
             chatCurrent_number : 0,  //当前聊天对象
-            customer_id : "{{$user->id}}"
+            customer_id : "{{$user->id}}",
         },
         created   : function () {
             this.connect();
@@ -185,7 +195,7 @@
                 var reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = function (e) {
-                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.chatCurrent_number)
+                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.chatCurrent_number,othis.currentUser.name)
                 }
             }
         },
@@ -250,7 +260,8 @@
                                         content : data.content,
                                         avatar  : data.avatar,
                                         number: data.number,
-                                        sendTime: data.sendTime
+                                        sendTime: data.sendTime,
+                                        name:data.name
                                     };
 
                                     if (typeof(othis.userData[data.masterId]) == "undefined")
@@ -266,7 +277,7 @@
                                             othis.roomUser['user'+ data.number] = {avatar:data.avatar, number:data.number};
                                         }
                                     }
-                                    console.log(othis.roomUser);
+                                    console.log(othis.userData);
                                     othis.userData[data.masterId].push(broadcastMsg);
 
                                     othis.AllFd['user' + data.fromUserFd] = data.fromUserFd;
@@ -337,6 +348,21 @@
                                     });
                                     break;
                                 }
+                                case 205:{
+                                    othis.currentUser.name = data.info.name;
+                                    console.log(data);
+                                    $.ajax({
+                                        url:'{{route('chat.customer_update')}}',
+                                        data:{id:'{{$user['id']}}',name:data.info.name},
+                                        dataType:'json',
+                                        type: 'POST',
+                                        success: function (data) {
+                                            console.log(data)
+                                        },error:function (res,type) {
+                                            console.log(res,type)
+                                        }
+                                    });
+                                }
                             }
                         } catch (e) {
                             console.warn(e);
@@ -382,11 +408,12 @@
              * @param content
              * @param fd 客服id
              * @param number 客户号
+             * @param name 客服名称
              */
-            broadcastTextMessage : function (content,fd,number) {
-                console.log('send text', fd , number)
+            broadcastTextMessage : function (content,fd,number,name) {
+                console.log('send text', fd , number,name)
                 this.release('Customer', 'sendPersonal',
-                    {content: content, type: 'text',toUserFd:fd,number:number,masterId:number,mode:'customer'}
+                    {content: content, type: 'text',toUserFd:fd,number:number,masterId:number,mode:'customer',name:name}
                     )
             },
             /**
@@ -394,11 +421,12 @@
              * @param base64_content
              * @param fd 客服id
              * @param number 客户号
+             * @param name 客服名称
              */
-            broadcastImageMessage: function (base64_content,fd,number) {
-                console.log('send image', fd , number)
+            broadcastImageMessage: function (base64_content,fd,number,name) {
+                console.log('send image', fd , number,name)
                 this.release('Customer', 'sendPersonal',
-                    {content: base64_content, type: 'image',toUserFd:fd,number:number,masterId:number,mode:'customer'}
+                    {content: base64_content, type: 'image',toUserFd:fd,number:number,masterId:number,mode:'customer',name:name}
                     )
             },
             picture              : function () {
@@ -423,7 +451,7 @@
 
                 if (content.trim() !== '') {
                     if (this.websocketInstance && this.websocketInstance.readyState === 1) {
-                        this.broadcastTextMessage(content,othis.customer_id,othis.chatCurrent_number);
+                        this.broadcastTextMessage(content,othis.customer_id,othis.chatCurrent_number,othis.currentUser.name);
                         textInput.val('');
                     } else {
                         layer.tips('连接已断开', '.windows_input', {
@@ -439,10 +467,13 @@
                 }
             },
             changeName           : function () {
-                layer.prompt({title: '拒绝吃瓜，秀出你的昵称', formType: 0}, function (number, index) {
-                    if (number) {
-                        localStorage.setItem('number', number);
-                        window.location.reload();
+                var othis = this;
+
+                layer.prompt({title: '更变昵称', formType: 0}, function (name, index) {
+                    if (name) {
+                        othis.release('index','updateCustomerName',{name:name,number:othis.currentUser.number});
+                       /* localStorage.setItem('name', name);
+                        window.location.reload();*/
                     }
                     layer.close(index);
                 });

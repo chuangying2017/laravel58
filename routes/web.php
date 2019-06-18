@@ -28,6 +28,7 @@ Route::post('push/welcome', 'Caiji\ApiCommandController@pullGithub');
 
 Route::group(['namespace' => 'Chat', 'prefix' => 'chat', 'middleware' => 'chat'], function(){
     Route::get('chatShow', 'IndexController@chatShow')->name('chat.show');
+    Route::post('userUpdate', 'IndexController@userUpdate')->name('chat.customer_update');
 });
 
 Route::group(['prefix'=>'chat', 'namespace' => 'Chat'],function (){
