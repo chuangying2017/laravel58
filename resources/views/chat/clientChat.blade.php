@@ -8,7 +8,7 @@
     <title>微聊</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/amazeui/2.7.2/css/amazeui.min.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/layer/2.3/skin/layer.css">
-    <link rel="stylesheet" href="/static/chat/css/client.css?v=120209">
+    <link rel="stylesheet" href="/static/chat/css/client.css?v=1202010">
     <script src="https://cdn.staticfile.org/vue/2.5.17-beta.0/vue.js"></script>
     <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/layer/2.3/layer.js"></script>
@@ -17,14 +17,6 @@
 <div id="chat">
     <template>
         <div class="talk_window">
-              <div class="windows_top">
-                  <div class="windows_top_left"> {{--<i class="am-icon am-icon-list online-list"></i> --}}</div>
-                    <div class="windows_top_right">
-                  {{--<a href="javascript:;" @click="changeLogout"
-                          style="color: #999">退出</a>--}}
-                   </div>
-            </div>
-
             <div class="windows_body" id="chat-window" v-scroll-bottom>
                 <ul class="am-comments-list am-comments-list-flip">
                     <template v-for="chat in roomChat">
