@@ -208,7 +208,7 @@ ul {
     padding: 15px;
     width: 100%;
    /* height: 504px;*/
-    height: 508px;
+    height: 78%;
     overflow-y: scroll;
 }
 
@@ -391,7 +391,7 @@ ul {
     }
 
     .windows_body {
-        height: calc(100% - 143px - 63px);
+       /* height: calc(100% - 143px - 63px);*/
     }
 
     .windows_input {
