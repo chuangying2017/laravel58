@@ -53,7 +53,7 @@
         </div>
         <div class="talk_window">
             <div class="windows_top">
-                <div class="windows_top_left"><i class="am-icon am-icon-list online-list"></i> 微客服</div>
+                <div class="windows_top_left">{{--<i class="am-icon am-icon-list online-list"></i> --}}</div>
                 <div class="windows_top_right">
                     <a href="javascript:;" @click="changeLogout"
                        style="color: #999">退出</a>
@@ -266,9 +266,9 @@
                                             othis.roomUser['user'+ data.number] = {avatar:data.avatar, number:data.number};
                                         }
                                     }
-                                    console.log(othis.roomUser['user'+ data.number])
+
                                     othis.userData[data.masterId].push(broadcastMsg);
-                                    console.log(othis.userData[data.masterId]);
+
                                     othis.AllFd['user' + data.fromUserFd] = data.fromUserFd;
                                     //当发送的用户 等于 当前聊天窗口的用户 马上推送到当前聊天窗口
                                     var arr = [othis.chatCurrent_number,othis.currentUser.number];
@@ -417,7 +417,8 @@
 
                 if (othis.chatCurrent_number <= 0)
                 {
-                    layer.msg('请选择发送的用户')
+                    layer.msg('请选择发送的用户');
+                    return;
                 }
 
                 if (content.trim() !== '') {
@@ -459,6 +460,7 @@
                 console.log(fe);
                 $('#' + fe).text('');
                 $('#' + fe).removeClass('news_note');
+                $('div.windows_top_left').text(fe);
                 this.roomChat = [];
                 console.log(this.userData[fe],'here undefined 123');
                 for (let i in this.userData[fe])
