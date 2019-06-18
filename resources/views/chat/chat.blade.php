@@ -116,7 +116,7 @@
                     <div class="left">
                     </div>
                     <div class="right">
-                        <button class="send" @click="clearContent">清空消息</button>
+                        <button class="send" @click="clearContent">清空内容</button>
                         <button class="send sendBtn" @click="clickBtnSend">发送消息</button>
                     </div>
                 </div>
