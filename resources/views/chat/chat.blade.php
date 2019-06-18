@@ -38,7 +38,7 @@
                 <div class="online_item" v-on:click="freed(user.number)" v-for="user in roomUser">
                     <template v-if="user">
                         <div class="online_avatar">
-                            <i v-if="user.num > 0" class="news_note">@{{user.num}}</i>
+                            <i v-bind:id="user.number" ></i>
                             <img :src="user.avatar" alt="">
                         </div>
                         <div class="online_status">
@@ -266,9 +266,9 @@
                                             othis.roomUser['user'+ data.number] = {avatar:data.avatar, number:data.number};
                                         }
                                     }
-
+                                    console.log(othis.roomUser['user'+ data.number])
                                     othis.userData[data.masterId].push(broadcastMsg);
-
+                                    console.log(othis.userData[data.masterId]);
                                     othis.AllFd['user' + data.fromUserFd] = data.fromUserFd;
                                     //当发送的用户 等于 当前聊天窗口的用户 马上推送到当前聊天窗口
                                     var arr = [othis.chatCurrent_number,othis.currentUser.number];
@@ -276,23 +276,21 @@
                                     {
                                         othis.roomChat.push(broadcastMsg);
                                     }else{
-                                        //新消息提示
-                                        if (typeof(othis.unreadMsg[data.number]) == "undefined")
+                                        var unread = $('#'+data.number);
+                                        unread.removeClass('news_note');
+                                        unread.addClass('news_note');
+                                        if (unread.text() == '99+' || unread.text() > 99)
                                         {
-                                            console.log('laidaozheli');
-                                            othis.roomUser['user'+ data.number]['num'] = 1;
+                                            unread.text('99+')
                                         }else{
-                                            var num = othis.roomUser['user'+ data.number]['num'];
-
-                                            if (num > 99)
+                                            if (!unread.text())
                                             {
-                                                othis.roomUser['user'+ data.number]['num'] = '99+';
+                                                unread.text(1);
                                             }else{
-                                                othis.roomUser['user'+ data.number]['num'] = num + 1;
+                                                unread.text(parseInt(unread.text()) + 1);
                                             }
-                                            console.log('meiyoujinlai')
+
                                         }
-                                        console.log(othis.roomUser['user'+ data.number])
                                     }
 
                                     break;
@@ -459,7 +457,8 @@
             },
             freed: function(fe){
                 console.log(fe);
-                this.roomUser['user' + fe].num = 0;
+                $('#' + fe).text('');
+                $('#' + fe).removeClass('news_note');
                 this.roomChat = [];
                 console.log(this.userData[fe],'here undefined 123');
                 for (let i in this.userData[fe])
