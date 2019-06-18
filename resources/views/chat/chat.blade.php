@@ -8,7 +8,7 @@
     <title>微客服</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/amazeui/2.7.2/css/amazeui.min.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/layer/2.3/skin/layer.css">
-    <link rel="stylesheet" href="/static/chat/css/main.css?v=120205">
+    <link rel="stylesheet" href="/static/chat/css/main.css?v=120206">
     <script src="https://cdn.staticfile.org/vue/2.5.17-beta.0/vue.js"></script>
     <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/layer/2.3/layer.js"></script>
@@ -266,7 +266,7 @@
                                             othis.roomUser['user'+ data.number] = {avatar:data.avatar, number:data.number};
                                         }
                                     }
-
+                                    console.log(othis.roomUser);
                                     othis.userData[data.masterId].push(broadcastMsg);
 
                                     othis.AllFd['user' + data.fromUserFd] = data.fromUserFd;
@@ -458,9 +458,13 @@
             },
             freed: function(fe){
                 console.log(fe);
-                $('#' + fe).text('');
-                $('#' + fe).removeClass('news_note');
+                var redPoint = $('#' + fe);
+                redPoint.text('');
+                redPoint.removeClass('news_note');
                 $('div.windows_top_left').text(fe);
+                $('.online_item.background-user').removeClass('background-user');
+                redPoint.parent().parent().addClass('background-user');
+
                 this.roomChat = [];
                 console.log(this.userData[fe],'here undefined 123');
                 for (let i in this.userData[fe])

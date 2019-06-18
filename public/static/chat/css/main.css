@@ -384,6 +384,10 @@ ul {
     display: none;
 }
 
+.online_item.background-user{
+    background-color:beige;
+}
+
 /* ---------------- 响应式适配 ---------------- */
 
 @media only screen and (min-width: 641px ) {
