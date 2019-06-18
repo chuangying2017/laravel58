@@ -176,7 +176,13 @@
                         othis.websocketInstance.send('PING');
                     }, 1000 * 30);
                     // 请求获取自己的用户信息和在线列表
-                     othis.release('client', 'info', {'client':{'avatar':'{{$client['avatar']}}', 'number': '{{$client['number']}}'},'customer': {'customer_id': '{{$customer['id']}}','number': '{{$customer['number']}}'}});
+                     othis.release('client', 'info', {
+                         'client':{'avatar':'{{$client['avatar']}}', 'number': '{{$client['number']}}'},
+                         'customer': {
+                             'customer_id': '{{$customer['id']}}',
+                             'number': '{{$customer['number']}}',
+                             'avatar':'{{$customer['avatar']}}'
+                         }});
                    // othis.release('index', 'online');
                     othis.websocketInstance.onmessage = function (ev) {
                         try {
@@ -310,7 +316,7 @@
              * @param masterId 聊天组的id
              */
             broadcastTextMessage : function (content,fd,number,masterId) {
-                console.log(fd,'send user fd_id');
+                console.log(fd,'send user fd_id',content,number,masterId);
                 this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: fd,number:number,masterId:masterId})
             },
             /**

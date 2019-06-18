@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Chat;
 
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
@@ -31,17 +33,31 @@ class IndexController extends Controller
             $random = character(8);
 
             try{
-                $arr['customer'] = decrypt($string);
-                $arr['customer']['avatar'] = makeGravatar(character(8). '@swoole.com');
+                $user = decrypt($string);
+                $arr['customer'] = $user instanceof Model ? $user->toArray() : $user;
+                $arr['customer']['avatar'] = makeGravatar($arr['customer']['number']. '@swoole.com');
             }catch (DecryptException $exception)
             {
                 Log::error($exception->getMessage());
             }
             //生成客户类型
 
+            
+            if (!$request->cookie('number'))
+            {
+
+                $number = 'KF_'.$random;
+                $avatar = makeGravatar($random. '@swoole.com');
+
+            }else{
+
+                $number = Cookie::get('number');
+                $avatar = Cookie::get('avatar');
+            }
+            
             $arr['client'] = [
-                'avatar' => makeGravatar($random. '@swoole.com'),
-                'number' =>'KF_'.$random,
+                'avatar' => $avatar,
+                'number' =>$number,
                 'intro' => '客服咨询'
             ];
 

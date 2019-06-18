@@ -259,11 +259,11 @@
                                     }
 
 
-                                    if (typeof(othis.roomUser['user'+ data.fromUserFd]) == "undefined")
+                                    if (typeof(othis.roomUser['user'+ data.number]) == "undefined")
                                     {
                                         if (data.number != othis.currentUser.number)
                                         {
-                                            othis.roomUser['user'+ data.fromUserFd] = {avatar:data.avatar, number:data.number};
+                                            othis.roomUser['user'+ data.number] = {avatar:data.avatar, number:data.number};
                                         }
                                     }
 
@@ -309,17 +309,14 @@
                                 }
                                 case 203: {
                                     // 将新用户插入会话 列表
-                                    othis.$set(othis.roomUser, 'user' + data.info.fd, data.info);
-                                   /* othis.roomChat.push({
-                                        type   : 'tips',
-                                        content: '欢迎 ' + data.info.number + ' 加入群聊',
-                                    });*/
+                                    othis.$set(othis.roomUser, 'user' + data.info.number, data.info);
+
                                     break;
                                 }
                                 case 204: {
                                     // 用户已离线
-                                    var number = othis.roomUser['user' + data.userFd].number;
-                                    othis.$delete(othis.roomUser, 'user' + data.userFd);
+                                    var number = othis.roomUser['user' + data.number].number;
+                                    othis.$delete(othis.roomUser, 'user' + data.number);
                                     othis.roomChat.push({
                                         type   : 'tips',
                                         content: ' ' + number + ' 离开了',
