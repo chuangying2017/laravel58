@@ -38,7 +38,7 @@
                 <div class="online_item" v-on:click="freed(user.number)" v-for="user in roomUser">
                     <template v-if="user">
                         <div class="online_avatar">
-                            <i class="news_note">99+</i>
+                            <i v-if="user.num > 0" class="news_note">@{{user.num}}</i>
                             <img :src="user.avatar" alt="">
                         </div>
                         <div class="online_status">
@@ -277,6 +277,22 @@
                                         othis.roomChat.push(broadcastMsg);
                                     }else{
                                         //新消息提示
+                                        if (typeof(othis.unreadMsg[data.number]) == "undefined")
+                                        {
+                                            console.log('laidaozheli');
+                                            othis.roomUser['user'+ data.number]['num'] = 1;
+                                        }else{
+                                            var num = othis.roomUser['user'+ data.number]['num'];
+
+                                            if (num > 99)
+                                            {
+                                                othis.roomUser['user'+ data.number]['num'] = '99+';
+                                            }else{
+                                                othis.roomUser['user'+ data.number]['num'] = num + 1;
+                                            }
+                                            console.log('meiyoujinlai')
+                                        }
+                                        console.log(othis.roomUser['user'+ data.number])
                                     }
 
                                     break;
@@ -443,8 +459,9 @@
             },
             freed: function(fe){
                 console.log(fe);
+                this.roomUser['user' + fe].num = 0;
                 this.roomChat = [];
-                console.log(this.userData[fe]);
+                console.log(this.userData[fe],'here undefined 123');
                 for (let i in this.userData[fe])
                 {
                     this.roomChat.push(this.userData[fe][i]);
