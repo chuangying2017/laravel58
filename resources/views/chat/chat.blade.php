@@ -274,13 +274,13 @@
                                     {
                                         if (data.number != othis.currentUser.number)
                                         {
-                                            othis.roomUser['user'+ data.number] = {avatar:data.avatar, number:data.number};
+                                            othis.roomUser['user'+ data.number] = {avatar:data.avatar, number:data.number,fd:data.fromUserFd};
                                         }
                                     }
-                                    console.log(othis.userData);
+
                                     othis.userData[data.masterId].push(broadcastMsg);
 
-                                    othis.AllFd['user' + data.fromUserFd] = data.fromUserFd;
+                                    othis.AllFd['user' + data.number] = data.fromUserFd;
                                     //当发送的用户 等于 当前聊天窗口的用户 马上推送到当前聊天窗口
                                     var arr = [othis.chatCurrent_number,othis.currentUser.number];
                                     if (arr.includes(data.number))
@@ -362,6 +362,11 @@
                                             console.log(res,type)
                                         }
                                     });
+                                }
+                                case 206:{
+                                    /**  删除客服端的客服 聊天会话 窗口 */
+                                    othis.$delete(othis.roomUser, 'user' + data.ClientNumber);
+                                    console.log('welcome delete object msg! very good');
                                 }
                             }
                         } catch (e) {
@@ -508,6 +513,10 @@
             clearContent : function () {
                 var textInput = $('#text-input');
                 textInput.val('');
+            },
+            removeSession: function(number){
+                    let othis = this;
+                    othis.release('Customer','deleteSessionRecord', {customer_number:othis.currentUser.number,client_number:number});
             }
         },
         computed  : {

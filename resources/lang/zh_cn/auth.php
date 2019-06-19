@@ -17,7 +17,7 @@ return [
     'throttle' => '频繁的登录！ 请在 :seconds 秒后在试。',
     'forbidden' => '当前用户被禁用',
     'delete' => '已经删除',
-    'success' => '登录成功过',
+    'success' => '登录成功',
     'status_fail' => '无状态登录失败'
 
 ];
