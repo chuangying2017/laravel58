@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Predis\Client;
 
 class IndexController extends Controller
@@ -48,10 +49,12 @@ class IndexController extends Controller
             }catch (DecryptException $exception)
             {
                 Log::error($exception->getMessage());
+
+                return response()->json(['msg' => $exception->getMessage()]);
             }
             //生成客户类型
 
-        /*    $ip = $request->ip();
+            $ip = $request->ip();
 
             $predis = new Client();
 
@@ -67,27 +70,7 @@ class IndexController extends Controller
                 $predis->setex($ip,3600,serialize($array));
             }
 
-            $arr['client'] = $array;*/
-
-
-            if (!$request->cookie('number'))
-            {
-
-                $number = 'KF_'.$random;
-                $avatar = makeGravatar($random. '@swoole.com');
-
-            }else{
-
-                $number = Cookie::get('number');
-                $avatar = Cookie::get('avatar');
-            }
-
-            $arr['client'] = [
-                'avatar' => $avatar,
-                'number' =>$number,
-                'intro' => '客服咨询'
-            ];
-
+            $arr['client'] = $array;
 
         }else{
 
@@ -103,5 +86,13 @@ class IndexController extends Controller
         $res = $this->member->edit($request->get('id'),$request->only('name'));
 
         return response()->json($res);
+    }
+
+    public function uploadFile(Request $request)
+    {
+            $path = Storage::disk('public')->putFile('chat_image',$request->file('image'),'public');
+
+            return response()->json(['status' => 1,'path' => Storage::url($path)]);
+
     }
 }

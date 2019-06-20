@@ -153,6 +153,7 @@
             AllFd: {},
             chatCurrent_number : 0,  //当前聊天对象
             customer_id : "{{$user->id}}",
+            daemon_url: "{{get_host()}}",
         },
         created   : function () {
             this.connect();
@@ -192,22 +193,43 @@
                     alert('图片大小不能超过8MB');
                     return false;
                 }
-                var reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function (e) {
-                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.chatCurrent_number,othis.currentUser.name)
-                }
+                var formData = new FormData();
+                formData.append('image', file);
+
+                // 设置ajax的参数
+                var options = {
+                    url: '{{route('chat.file_upload')}}',
+                    data: formData,
+                    type: 'post',
+                    dataType:'json',
+                    processData: false,
+                    contentType: false,
+                    success: function(data)
+                    {
+                        if (data.status == 1)
+                        {
+                            var reader = new FileReader();
+                            reader.readAsDataURL(file);
+                            reader.onload = function (e) {
+                                othis.broadcastImageMessage(data.path,othis.customer_id,othis.customer_number,othis.currentUser.number)
+                            }
+                        }
+                    },error:function(err,type){
+                        console.log(err,type)
+                    }
+                };
+                $.ajax(options);
             }
         },
         methods   : {
             connect              : function () {
                 var othis = this;
                 //设置本地客户端的昵称
-                var number = localStorage.getItem('number');
+         //     var number = localStorage.getItem('number');
                 var websocketServer = this.websocketServer;
-                if (number) {
+            /*    if (number) {
                     websocketServer += '?number=' + encodeURIComponent(number)
-                }
+                }*/
                 this.websocketInstance = new WebSocket(websocketServer);
                 this.websocketInstance.onopen = function (ev) {
                     // 断线重连处理
@@ -263,6 +285,11 @@
                                         sendTime: data.sendTime,
                                         name:data.name
                                     };
+
+                                    if (data.type == 'image')
+                                    {
+                                        broadcastMsg.content = othis.daemon_url + data.content;
+                                    }
 
                                     if (typeof(othis.userData[data.masterId]) == "undefined")
                                     {
@@ -333,7 +360,7 @@
                                     break;
                                 }
                                 case 203: {
-                                    // 将新用户插入会话 列表
+                                    // 将新用户插入会话 列表 用户上线
                                     othis.$set(othis.roomUser, 'user' + data.info.number, data.info);
 
                                     break;
@@ -517,6 +544,83 @@
             removeSession: function(number){
                     let othis = this;
                     othis.release('Customer','deleteSessionRecord', {customer_number:othis.currentUser.number,client_number:number});
+            },
+            checkPic: function(obj, fileSize)
+            {
+                //检查文件类型和大小
+                var picExts = 'jpg|jpeg|png|bmp|gif|webp';
+                var photoExt = obj.value.substr(obj.value.lastIndexOf(".") + 1).toLowerCase(); //获得文件后缀名
+                var pos = picExts.indexOf(photoExt);
+                if (pos < 0) {
+                    alert("您选中的文件不是图片，请重新选择");
+                    return false;
+                }
+                fileSize = Math.round(fileSize / 1024 * 100) / 100; //单位为KB
+                if (fileSize > 30 * 1024) {
+                    alert("您选择的图片大小超过限制(最大为30M)，请重新选择");
+                    return false;
+                }
+                return true;
+            },
+            fileOneChange: function(uploadFile)
+            {
+                //选择图片触发事件
+                if (!window.File || !window.FileList || !window.FileReader) {
+                    alert("您的浏览器不支持File Api");
+                    return;
+                }
+
+                var file = uploadFile.files[0];
+                var fileSize = file.size;
+
+                //先检查图片类型和大小
+                if (!checkPic(uploadFile, fileSize)) {
+                    return;
+                }
+
+                //预览图片
+                var reader = new FileReader();
+                var preDiv = document.getElementById('previewPicDiv');
+                reader.onload = (function(file) {
+                    return function(e) {
+                        preDiv.innerHTML = '';
+                        var span = document.createElement('span');
+                        span.innerHTML = '<img class="img-responsive" src="' + this.result + '" alt="' + file.name + '" />';
+                        //span.innerHTML = '<img class="img-thumbnail" src="' + this.result + '" alt="' + file.name + '" />';
+                        preDiv.insertBefore(span, null);
+                    };
+                })(file);
+                //预览图片
+                reader.readAsDataURL(file);
+            },
+            uploadPic: function () {
+                var uploadFiles = document.getElementById('upd_pic');
+                var file = uploadFiles.files[0];
+                var businessType; //业务类型，1-发群图片，2-向好友发图片
+                if (selType == webim.SESSION_TYPE.C2C) { //向好友发图片
+                    businessType = webim.UPLOAD_PIC_BUSSINESS_TYPE.C2C_MSG;
+                } else if (selType == webim.SESSION_TYPE.GROUP) { //发群图片
+                    businessType = webim.UPLOAD_PIC_BUSSINESS_TYPE.GROUP_MSG;
+                }
+                //封装上传图片请求
+                var opt = {
+                    'file': file, //图片对象
+                    'onProgressCallBack': onProgressCallBack, //上传图片进度条回调函数
+                    //'abortButton': document.getElementById('upd_abort'), //停止上传图片按钮
+                    'To_Account': selToID, //接收者
+                    'businessType': businessType //业务类型
+                };
+                //上传图片
+                webim.uploadPic(opt,
+                    function(resp) {
+                        //上传成功发送图片
+                        sendPic(resp, file.name);
+                        $('#upload_pic_dialog').modal('hide');
+                    },
+                    function(err) {
+                        alert(err.ErrorInfo);
+                    }
+                );
             }
         },
         computed  : {

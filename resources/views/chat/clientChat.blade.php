@@ -101,7 +101,8 @@
             roomChat         : [],
             up_recv_time     : 0,
             customer_id : 0,
-            customer_number: 0
+            customer_number: 0,
+            daemon_url: "{{get_host()}}"
         },
         created   : function () {
             this.connect();
@@ -141,11 +142,35 @@
                     alert('图片大小不能超过8MB');
                     return false;
                 }
-                var reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function (e) {
-                    othis.broadcastImageMessage(this.result,othis.customer_id,othis.customer_number,othis.currentUser.number)
-                }
+
+                var formData = new FormData();
+                formData.append('image', file);
+
+                // 设置axios的参数
+                var options = {
+                    url: '{{route('chat.file_upload')}}',
+                    data: formData,
+                    type: 'post',
+                    dataType:'json',
+                    processData: false,
+                    contentType: false,
+                    success: function(data)
+                    {
+                        if (data.status == 1)
+                        {
+                            var reader = new FileReader();
+                            reader.readAsDataURL(file);
+                            reader.onload = function (e) {
+                                othis.broadcastImageMessage(data.path,othis.customer_id,othis.customer_number,othis.currentUser.number)
+                            }
+                        }
+                    },error:function(err,type){
+                        console.log(err,type)
+                    }
+                };
+                $.ajax(options);
+
+
             }
         },
         methods   : {
@@ -217,6 +242,11 @@
                                         sendTime: data.sendTime,
                                         name:data.name
                                     };
+
+                                    if (data.type == 'image')
+                                    {
+                                        broadcastMsg.content = othis.daemon_url + data.content;
+                                    }
                                     othis.roomChat.push(broadcastMsg);
                                     break;
                                 }
@@ -324,6 +354,7 @@
              * @param masterId 聊天组的id
              */
             broadcastImageMessage: function (base64_content,fd,number,masterId) {
+                console.log('send image', fd, number);
                 this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,number:number,masterId:masterId})
             },
             picture              : function () {
