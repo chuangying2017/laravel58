@@ -166,4 +166,38 @@ class Member
 
        return SessionRecord::query()->insert($arr);
     }
+
+    protected function sessionRecord_select()
+    {
+        return SessionRecord::with('customer');
+    }
+
+    protected function client_select($number)
+    {
+        $res = $this->sessionRecord_select()->where('client_number',$number)->get();
+
+        return $res;
+    }
+
+    protected function customer_select(array $where)
+    {
+        $res = $this->sessionRecord_select()->where($where)->get();
+
+        return $res;
+    }
+
+    public function select_session(array $all)
+    {
+
+        if (isset($all['client_number']) && isset($all['customer_id']))
+        {
+            $res = $this->customer_select([['client_number', '=', $all['client_number']],['customer_id','=',$all['customer_id']]])->toArray();
+        }elseif($all['client_number']){
+            $res = $this->client_select($all['client_number'])->toArray();
+        }else{
+            $res = [];
+        }
+
+        return $res;
+    }
 }

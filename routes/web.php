@@ -37,6 +37,7 @@ Route::group(['prefix'=>'chat', 'namespace' => 'Chat'],function (){
     Route::get('loginOut', 'UserDataHandleController@loginOut')->name('chat.loginOut');
     Route::get('client', 'IndexController@clientChat')->name('chat.client');
     Route::post('uploadFile', 'IndexController@uploadFile')->name('chat.file_upload');
+    Route::post('session_record', 'IndexController@sessionRecord')->name('chat.sessionRecord');
 });
 
 //重定向 提示信息

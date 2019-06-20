@@ -28,7 +28,7 @@
                             <div v-if="chat.sendTime" class="chat-tips">
                                 <span class="am-radius" style="color: #666666">@{{chat.sendTime}}</span>
                             </div>
-                            <article class="am-comment" :class="{ 'am-comment-flip' : chat.fd == currentUser.fd }">
+                            <article class="am-comment" :class="{ 'am-comment-flip' : chat.number == currentUser.number }">
                                 <a href="#link-to-user-home">
                                     <img :src="chat.avatar" alt="" class="am-comment-avatar"
                                          width="48" height="48"/>
@@ -106,6 +106,7 @@
         },
         created   : function () {
             this.connect();
+            this.session_record();
         },
         mounted   : function () {
             var othis = this;
@@ -168,8 +169,8 @@
                         console.log(err,type)
                     }
                 };
-                $.ajax(options);
 
+                $.ajax(options);
 
             }
         },
@@ -400,6 +401,41 @@
             clearContent : function () {
                 var textInput = $('#text-input');
                 textInput.val('');
+            },
+            session_record: function(){
+                let othis = this;
+                $.ajax({
+                    url:'{{route('chat.sessionRecord')}}',
+                    data: {client_number:'{{$client['number']}}'},
+                    dataType:'json',
+                    type:'POST',
+                    success: function(data)
+                    {
+                        for (let i =0; i < data.msg.length; i++)
+                        {
+                            let append_data = {};
+                            let arr1 = data.msg[i];
+                            if (arr1.mode == 'send')
+                            {
+                                append_data.number = arr1.client_number;
+                                append_data.avatar = othis.currentUser.avatar;
+                            }else{
+                                append_data.number = arr1.customer.number;
+                                append_data.name = arr1.customer.name;
+                                append_data.avatar = '{{$customer['avatar']}}';
+                            }
+
+                            append_data.type = arr1.type == 'msg' ? 'text' : 'image';
+                            append_data.content = arr1.content;
+
+                            othis.roomChat.push(append_data);
+                        }
+
+                    },error:function(error,type)
+                    {
+                        console.log(error,type);
+                    }
+                })
             }
         },
         computed  : {

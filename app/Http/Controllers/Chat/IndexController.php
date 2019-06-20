@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Chat;
 
+use App\Model\SessionRecord;
 use App\Repository\Chat\Member;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
@@ -94,5 +95,12 @@ class IndexController extends Controller
 
             return response()->json(['status' => 1,'path' => Storage::url($path)]);
 
+    }
+
+    public function sessionRecord(Request $request)
+    {
+        $arr = $this->member->select_session($request->all());
+
+        return response()->json(['status' => 1, 'msg'=> $arr]);
     }
 }

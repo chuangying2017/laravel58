@@ -71,7 +71,7 @@
                             <div v-if="chat.sendTime" class="chat-tips">
                                 <span class="am-radius" style="color: #666666">@{{chat.sendTime}}</span>
                             </div>
-                            <article class="am-comment" :class="{ 'am-comment-flip' : chat.fd == currentUser.fd }">
+                            <article class="am-comment" :class="{ 'am-comment-flip' : chat.number == currentUser.number }">
                                 <a href="#link-to-user-home">
                                     <img :src="chat.avatar" alt="" class="am-comment-avatar"
                                          width="48" height="48"/>
@@ -519,22 +519,9 @@
                 });
             },
             freed: function(fe){
-                console.log(fe);
-                var redPoint = $('#' + fe);
-                redPoint.text('');
-                redPoint.removeClass('news_note');
-                $('div.windows_top_left').find('div.user-nickname').text(fe);
-                $('.online_item.background-user').removeClass('background-user');
-                redPoint.parent().parent().addClass('background-user');
 
-                this.roomChat = [];
-                console.log(this.userData[fe],'here undefined 123');
-                for (let i in this.userData[fe])
-                {
-                    this.roomChat.push(this.userData[fe][i]);
-                }
-                console.log(this.roomChat);
-                this.chatCurrent_number = fe;
+                this.session_record(fe);
+
             },
             clearContent : function () {
                 var textInput = $('#text-input');
@@ -610,7 +597,7 @@
                     'To_Account': selToID, //接收者
                     'businessType': businessType //业务类型
                 };
-                //上传图片
+       /*         //上传图片
                 webim.uploadPic(opt,
                     function(resp) {
                         //上传成功发送图片
@@ -620,7 +607,60 @@
                     function(err) {
                         alert(err.ErrorInfo);
                     }
-                );
+                );*/
+            },
+            session_record: function(client_number){
+                let othis = this;
+                $.ajax({
+                    url:'{{route('chat.sessionRecord')}}',
+                    data: {client_number:client_number,customer_id:'{{$user['id']}}'},
+                    dataType:'json',
+                    type:'POST',
+                    success: function(data)
+                    {
+                        console.log(data);
+                        othis.roomChat = [];
+                        for (let i =0; i < data.msg.length; i++)
+                        {
+                            let append_data = {};
+                            let arr1 = data.msg[i];
+                            if (arr1.mode == 'send')
+                            {
+                                append_data.number = arr1.client_number;
+                                append_data.avatar = 'https://www.gravatar.com/avatar/772270462a6954311c9a96b1f441a6f4?s=120&amp;d=identicon';
+                                append_data.name = null;
+                            }else{
+                                append_data.number = othis.currentUser.number;
+                                append_data.name = othis.currentUser.name;
+                                append_data.avatar = othis.currentUser.avatar;
+                            }
+
+                            append_data.type = arr1.type == 'msg' ? 'text' : 'image';
+                            append_data.content = arr1.content;
+
+                            othis.roomChat.push(append_data);
+
+                        }
+
+                        var redPoint = $('#' + client_number);
+
+                        redPoint.text('');
+
+                        redPoint.removeClass('news_note');
+
+                        $('div.windows_top_left').find('div.user-nickname').text(client_number);
+
+                        $('.online_item.background-user').removeClass('background-user');
+
+                        redPoint.parent().parent().addClass('background-user');
+
+                        othis.chatCurrent_number = client_number;
+
+                    },error:function(error,type)
+                    {
+                        console.log(error,type);
+                    }
+                })
             }
         },
         computed  : {
