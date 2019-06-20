@@ -241,7 +241,6 @@
                                     {
                                         broadcastMsg.content = othis.daemon_url + data.content;
                                     }
-                                    console.log(othis.currentUser);
                                     othis.roomChat.push(broadcastMsg);
                                     break;
                                 }
@@ -259,7 +258,6 @@
                                     break;
                                 }
                                 case 201: {
-                                    console.log(201,data)
                                     // 刷新自己的用户信息
                                     othis.currentUser.intro = data.intro;
                                     othis.currentUser.avatar = data.avatar;
