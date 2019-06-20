@@ -44,6 +44,7 @@
                         <div class="online_status">
                             <div class="online_username">@{{user.number}}</div>
                         </div>
+                        <div class="close-window" v-on:click="removeSession(user.number)">x</div>
                     </template>
                 </div>
             </div>
@@ -291,18 +292,17 @@
                                         broadcastMsg.content = othis.daemon_url + data.content;
                                     }
 
-                                    if (typeof(othis.userData[data.masterId]) == "undefined")
-                                    {
-                                        othis.userData[data.masterId] = [];
-                                    }
-
-
                                     if (typeof(othis.roomUser['user'+ data.number]) == "undefined")
                                     {
                                         if (data.number != othis.currentUser.number)
                                         {
-                                            othis.roomUser['user'+ data.number] = {avatar:data.avatar, number:data.number,fd:data.fromUserFd};
+                                            othis.$set(othis.roomUser,'user'+ data.number,{avatar:data.avatar, number:data.number,fd:data.fromUserFd});
                                         }
+                                    }
+
+                                    if (typeof(othis.userData[data.masterId]) == "undefined")
+                                    {
+                                        othis.userData[data.masterId] = [];
                                     }
 
                                     othis.userData[data.masterId].push(broadcastMsg);
@@ -377,7 +377,7 @@
                                 }
                                 case 205:{
                                     othis.currentUser.name = data.info.name;
-                                    console.log(data);
+
                                     $.ajax({
                                         url:'{{route('chat.customer_update')}}',
                                         data:{id:'{{$user['id']}}',name:data.info.name},
@@ -393,7 +393,6 @@
                                 case 206:{
                                     /**  删除客服端的客服 聊天会话 窗口 */
                                     othis.$delete(othis.roomUser, 'user' + data.ClientNumber);
-                                    console.log('welcome delete object msg! very good');
                                 }
                             }
                         } catch (e) {
@@ -543,6 +542,7 @@
             },
             removeSession: function(number){
                     let othis = this;
+                    console.log(number,othis.currentUser.number);
                     othis.release('Customer','deleteSessionRecord', {customer_number:othis.currentUser.number,client_number:number});
             },
             checkPic: function(obj, fileSize)
