@@ -212,7 +212,7 @@
                             var reader = new FileReader();
                             reader.readAsDataURL(file);
                             reader.onload = function (e) {
-                                othis.broadcastImageMessage(data.path,othis.customer_id,othis.customer_number,othis.currentUser.number)
+                                othis.broadcastImageMessage(data.path,othis.customer_id,othis.chatCurrent_number,othis.currentUser.number)
                             }
                         }
                     },error:function(err,type){
@@ -437,27 +437,27 @@
             /**
              * 发送文本消息
              * @param content
-             * @param fd 客服id
+             * @param customer_id 客服id
              * @param number 客户号
              * @param name 客服名称
              */
-            broadcastTextMessage : function (content,fd,number,name) {
-                console.log('send text', fd , number,name)
+            broadcastTextMessage : function (content,customer_id,number,name) {
+
                 this.release('Customer', 'sendPersonal',
-                    {content: content, type: 'text',toUserFd:fd,number:number,masterId:number,mode:'customer',name:name}
+                    {content: content, type: 'text',toUserFd:customer_id,number:number,masterId:number,mode:'customer',name:name}
                     )
             },
             /**
              * 发送图片消息
-             * @param base64_content
-             * @param fd 客服id
+             * @param content
+             * @param customer_id 客服id
              * @param number 客户号
              * @param name 客服名称
              */
-            broadcastImageMessage: function (base64_content,fd,number,name) {
-                console.log('send image', fd , number,name)
+            broadcastImageMessage: function (content,customer_id,number,name) {
+
                 this.release('Customer', 'sendPersonal',
-                    {content: base64_content, type: 'image',toUserFd:fd,number:number,masterId:number,mode:'customer',name:name}
+                    {content: content, type: 'image',toUserFd:customer_id,number:number,masterId:number,mode:'customer',name:name}
                     )
             },
             picture              : function () {

@@ -333,24 +333,24 @@
             /**
              * 发送文本消息
              * @param content 发送主题
-             * @param fd 要发送的用户
+             * @param customer_id 要发送的用户
              * @param number 客服编号
-             * @param masterId 聊天组的id
+             * @param client_number 聊天组的id
              */
-            broadcastTextMessage : function (content,fd,number,masterId) {
+            broadcastTextMessage : function (content,customer_id,number,client_number) {
 
-                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: fd,number:number,masterId:masterId})
+                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: customer_id,number:number,masterId:client_number})
             },
             /**
              * 发送图片消息
-             * @param base64_content
-             * @param fd 要发送的用户
-             * @param number 客服编号
-             * @param masterId 聊天组的id
+             * @param content
+             * @param customer_id 要发送的用户
+             * @param customer_number 客服编号
+             * @param client_number 聊天组的id
              */
-            broadcastImageMessage: function (base64_content,fd,number,masterId) {
+            broadcastImageMessage: function (content,customer_id,customer_number,client_number) {
 
-                this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,number:number,masterId:masterId})
+                this.release('Customer', 'sendPersonal', {content: content, type: 'image',toUserFd:customer_id,number:customer_number,masterId:client_number})
             },
             picture              : function () {
                 var input = document.getElementById("fileInput");
