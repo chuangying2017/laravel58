@@ -25,4 +25,23 @@
             document.getElementById('logout-form').submit();
         },3000);
     </script>
+
+@elseif (isset($arr['chat_url']))
+
+    <script type="application/javascript">
+        setInterval(function(){
+            $.ajax({
+                url: '{{route('chat.loginOut')}}',
+                type:'GET',
+                dataType:'json',
+                success: function (data) {
+                    if (data.status == 1)
+                    {
+                        window.location.href = data.src;
+                    }
+                }
+            })
+        },3000);
+    </script>
+
 @endif

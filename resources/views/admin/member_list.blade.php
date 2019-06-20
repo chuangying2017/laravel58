@@ -29,8 +29,9 @@
 
                 <th width="90">客服号</th>
 
-
+                <th width="90">客服昵称</th>
                 <th width="130">加入时间</th>
+
                 <th width="70">状态</th>
                 <th width="100">操作</th>
             </tr>
@@ -42,6 +43,7 @@
                     <td>{{$k + 1}}</td>
                     <td><u class="text-primary" >{{$v['username']}}</u></td>
                     <td>{{$v['number']}}</td>
+                    <td>@empty($v['name']) <li style="color: indianred;list-style-type: none;">暂无昵称</li> @else {{$v['name']}} @endempty</td>
                     <td>{{$v['created_at']}}</td>
 
                     @if($v['status'] == 'active')

@@ -15,6 +15,7 @@ class Customer extends Model
 
     protected $foreignKey = 'manger_id';
 
+    const LOGIN_STATUS = ['inactive','discard'];
     //
     public function session_record()
     {
