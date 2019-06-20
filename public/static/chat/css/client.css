@@ -399,6 +399,7 @@ ul {
         left: 0;
         bottom: 0;
         z-index: 100;
+        background: #f5f5f5;
     }
 
     .online-list {
