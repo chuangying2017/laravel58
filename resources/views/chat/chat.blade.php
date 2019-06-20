@@ -8,7 +8,7 @@
     <title>微客服</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/amazeui/2.7.2/css/amazeui.min.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/layer/2.3/skin/layer.css">
-    <link rel="stylesheet" href="/static/chat/css/main.css?v=120206">
+    <link rel="stylesheet" href="{{asset('static/chat/css/main.css?v=120208')}}">
     <script src="https://cdn.staticfile.org/vue/2.5.17-beta.0/vue.js"></script>
     <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/layer/2.3/layer.js"></script>
@@ -53,7 +53,7 @@
         </div>
         <div class="talk_window">
             <div class="windows_top">
-                <div class="windows_top_left"><i class="am-icon am-icon-list online-list"></i> </div>
+                <div class="windows_top_left"><i class="am-icon am-icon-list online-list"></i> <div class="user-nickname"></div></div>
                 <div class="windows_top_right">
                     <a href="javascript:;" @click="changeLogout"
                        style="color: #999">退出</a>
@@ -70,7 +70,7 @@
                             <div v-if="chat.sendTime" class="chat-tips">
                                 <span class="am-radius" style="color: #666666">@{{chat.sendTime}}</span>
                             </div>
-                            <article class="am-comment" :class="{ 'am-comment-flip' : chat.fd == currentUser.userFd }">
+                            <article class="am-comment" :class="{ 'am-comment-flip' : chat.fd == currentUser.fd }">
                                 <a href="#link-to-user-home">
                                     <img :src="chat.avatar" alt="" class="am-comment-avatar"
                                          width="48" height="48"/>
@@ -350,7 +350,7 @@
                                     // 刷新自己的用户信息
                                     othis.currentUser.intro = data.intro;
                                     othis.currentUser.avatar = data.avatar;
-                                    othis.currentUser.fd = data.fd;
+                                    othis.currentUser.fd = data.userFd;
                                     othis.currentUser.number = data.number;
                                     break;
                                 }
@@ -524,7 +524,7 @@
                 var redPoint = $('#' + fe);
                 redPoint.text('');
                 redPoint.removeClass('news_note');
-                $('div.windows_top_left').text(fe);
+                $('div.windows_top_left').find('div.user-nickname').text(fe);
                 $('.online_item.background-user').removeClass('background-user');
                 redPoint.parent().parent().addClass('background-user');
 

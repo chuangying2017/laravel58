@@ -8,7 +8,7 @@
     <title>微聊</title>
     <link rel="stylesheet" href="https://cdn.staticfile.org/amazeui/2.7.2/css/amazeui.min.css">
     <link rel="stylesheet" href="https://cdn.staticfile.org/layer/2.3/skin/layer.css">
-    <link rel="stylesheet" href="/static/chat/css/client.css?v=1202012">
+    <link rel="stylesheet" href="{{asset('static/chat/css/client.css?v=1202013')}}">
     <script src="https://cdn.staticfile.org/vue/2.5.17-beta.0/vue.js"></script>
     <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/layer/2.3/layer.js"></script>
@@ -28,7 +28,7 @@
                             <div v-if="chat.sendTime" class="chat-tips">
                                 <span class="am-radius" style="color: #666666">@{{chat.sendTime}}</span>
                             </div>
-                            <article class="am-comment" :class="{ 'am-comment-flip' : chat.fd == currentUser.userFd }">
+                            <article class="am-comment" :class="{ 'am-comment-flip' : chat.fd == currentUser.fd }">
                                 <a href="#link-to-user-home">
                                     <img :src="chat.avatar" alt="" class="am-comment-avatar"
                                          width="48" height="48"/>
@@ -177,12 +177,7 @@
             connect              : function () {
                 var othis = this;
                 //设置本地客户端的昵称
-                var number = localStorage.getItem('number');
                 var websocketServer = this.websocketServer;
-                if (number) {
-                    websocketServer += '?number=' + encodeURIComponent(number)
-                }
-                console.log(number)
                 this.websocketInstance = new WebSocket(websocketServer);
                 this.websocketInstance.onopen = function (ev) {
                     // 断线重连处理
@@ -207,7 +202,6 @@
                     othis.websocketInstance.onmessage = function (ev) {
                         try {
                             var data = JSON.parse(ev.data);
-                            console.log(data,'is here start');
                             if (data.sendTime) {
                                 if (othis.up_recv_time + 10 * 1000 > (new Date(data.sendTime)).getTime()) {
                                     othis.up_recv_time = (new Date(data.sendTime)).getTime();
@@ -247,6 +241,7 @@
                                     {
                                         broadcastMsg.content = othis.daemon_url + data.content;
                                     }
+                                    console.log(othis.currentUser);
                                     othis.roomChat.push(broadcastMsg);
                                     break;
                                 }
@@ -264,10 +259,11 @@
                                     break;
                                 }
                                 case 201: {
+                                    console.log(201,data)
                                     // 刷新自己的用户信息
                                     othis.currentUser.intro = data.intro;
                                     othis.currentUser.avatar = data.avatar;
-                                    othis.currentUser.fd = data.fd;
+                                    othis.currentUser.fd = data.userFd;
                                     othis.currentUser.number = data.number;
                                     break;
                                 }

@@ -438,3 +438,7 @@ ul {
         margin-right: 10px;
     }
 }
+
+div.user-nickname{
+    float:right;
+}
