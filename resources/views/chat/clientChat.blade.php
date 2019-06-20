@@ -337,7 +337,7 @@
              * @param masterId 聊天组的id
              */
             broadcastTextMessage : function (content,fd,number,masterId) {
-                console.log(fd,'send user fd_id',content,number,masterId);
+
                 this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: fd,number:number,masterId:masterId})
             },
             /**
@@ -348,7 +348,7 @@
              * @param masterId 聊天组的id
              */
             broadcastImageMessage: function (base64_content,fd,number,masterId) {
-                console.log('send image', fd, number);
+
                 this.release('Customer', 'sendPersonal', {content: base64_content, type: 'image',toUserFd:fd,number:number,masterId:masterId})
             },
             picture              : function () {
