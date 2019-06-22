@@ -247,6 +247,7 @@
                     var cus = {};
                     cus.customer_id = othis.customer_id;
                     cus.number = othis.currentUser.number;
+                    cus.name = othis.currentUser.name;
                     othis.release('index', 'info',cus); //插入在线列表
                    // othis.release('index', 'online');
                     othis.websocketInstance.onmessage = function (ev) {
@@ -362,17 +363,24 @@
                                 case 203: {
                                     // 将新用户插入会话 列表 用户上线
                                     othis.$set(othis.roomUser, 'user' + data.info.number, data.info);
-
                                     break;
                                 }
                                 case 204: {
                                     // 用户已离线
-                                    var number = othis.roomUser['user' + data.number].number;
-                                    othis.$delete(othis.roomUser, 'user' + data.number);
-                                    othis.roomChat.push({
+
+                                    let arr = [othis.chatCurrent_number,othis.currentUser.number];
+                                    let msg = {
                                         type   : 'tips',
-                                        content: ' ' + number + ' 离开了',
-                                    });
+                                        content: ' ' + data.number + ' 离开了',
+                                    };
+                                    if (arr.includes(data.number))
+                                    {
+                                        othis.roomChat.push(msg);
+                                    }else{
+                                        othis.userData[data.number].push(msg);
+                                    }
+                                    // othis.$delete(othis.roomUser, 'user' + data.number);
+                                    console.log(204,data);
                                     break;
                                 }
                                 case 205:{
@@ -389,10 +397,24 @@
                                             console.log(res,type)
                                         }
                                     });
+                                    break;
                                 }
                                 case 206:{
                                     /**  删除客服端的客服 聊天会话 窗口 */
                                     othis.$delete(othis.roomUser, 'user' + data.ClientNumber);
+                                    break;
+                                }
+                                case 207:{
+                                    /** 更新所有的会话列表 */
+
+                                    for (let v in data.info)
+                                    {
+                                        let vs = data.info[v];
+
+                                        othis.$set(othis.roomUser, 'user' + vs.number, vs);
+                                    }
+
+                                    break;
                                 }
                             }
                         } catch (e) {
@@ -482,6 +504,7 @@
 
                 if (content.trim() !== '') {
                     if (this.websocketInstance && this.websocketInstance.readyState === 1) {
+                        console.log(othis.customer_id,othis.chatCurrent_number,othis.currentUser.name);
                         this.broadcastTextMessage(content,othis.customer_id,othis.chatCurrent_number,othis.currentUser.name);
                         textInput.val('');
                     } else {
@@ -532,84 +555,8 @@
                     console.log(number,othis.currentUser.number);
                     othis.release('Customer','deleteSessionRecord', {customer_number:othis.currentUser.number,client_number:number});
             },
-            checkPic: function(obj, fileSize)
-            {
-                //检查文件类型和大小
-                var picExts = 'jpg|jpeg|png|bmp|gif|webp';
-                var photoExt = obj.value.substr(obj.value.lastIndexOf(".") + 1).toLowerCase(); //获得文件后缀名
-                var pos = picExts.indexOf(photoExt);
-                if (pos < 0) {
-                    alert("您选中的文件不是图片，请重新选择");
-                    return false;
-                }
-                fileSize = Math.round(fileSize / 1024 * 100) / 100; //单位为KB
-                if (fileSize > 30 * 1024) {
-                    alert("您选择的图片大小超过限制(最大为30M)，请重新选择");
-                    return false;
-                }
-                return true;
-            },
-            fileOneChange: function(uploadFile)
-            {
-                //选择图片触发事件
-                if (!window.File || !window.FileList || !window.FileReader) {
-                    alert("您的浏览器不支持File Api");
-                    return;
-                }
-
-                var file = uploadFile.files[0];
-                var fileSize = file.size;
-
-                //先检查图片类型和大小
-                if (!checkPic(uploadFile, fileSize)) {
-                    return;
-                }
-
-                //预览图片
-                var reader = new FileReader();
-                var preDiv = document.getElementById('previewPicDiv');
-                reader.onload = (function(file) {
-                    return function(e) {
-                        preDiv.innerHTML = '';
-                        var span = document.createElement('span');
-                        span.innerHTML = '<img class="img-responsive" src="' + this.result + '" alt="' + file.name + '" />';
-                        //span.innerHTML = '<img class="img-thumbnail" src="' + this.result + '" alt="' + file.name + '" />';
-                        preDiv.insertBefore(span, null);
-                    };
-                })(file);
-                //预览图片
-                reader.readAsDataURL(file);
-            },
-            uploadPic: function () {
-                var uploadFiles = document.getElementById('upd_pic');
-                var file = uploadFiles.files[0];
-                var businessType; //业务类型，1-发群图片，2-向好友发图片
-                if (selType == webim.SESSION_TYPE.C2C) { //向好友发图片
-                    businessType = webim.UPLOAD_PIC_BUSSINESS_TYPE.C2C_MSG;
-                } else if (selType == webim.SESSION_TYPE.GROUP) { //发群图片
-                    businessType = webim.UPLOAD_PIC_BUSSINESS_TYPE.GROUP_MSG;
-                }
-                //封装上传图片请求
-                var opt = {
-                    'file': file, //图片对象
-                    'onProgressCallBack': onProgressCallBack, //上传图片进度条回调函数
-                    //'abortButton': document.getElementById('upd_abort'), //停止上传图片按钮
-                    'To_Account': selToID, //接收者
-                    'businessType': businessType //业务类型
-                };
-       /*         //上传图片
-                webim.uploadPic(opt,
-                    function(resp) {
-                        //上传成功发送图片
-                        sendPic(resp, file.name);
-                        $('#upload_pic_dialog').modal('hide');
-                    },
-                    function(err) {
-                        alert(err.ErrorInfo);
-                    }
-                );*/
-            },
             session_record: function(client_number){
+                console.log(client_number);
                 let othis = this;
                 $.ajax({
                     url:'{{route('chat.sessionRecord')}}',

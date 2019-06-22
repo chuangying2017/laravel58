@@ -334,12 +334,12 @@
              * 发送文本消息
              * @param content 发送主题
              * @param customer_id 要发送的用户
-             * @param number 客服编号
+             * @param customer_number 客服编号
              * @param client_number 聊天组的id
              */
-            broadcastTextMessage : function (content,customer_id,number,client_number) {
+            broadcastTextMessage : function (content,customer_id,customer_number,client_number) {
 
-                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: customer_id,number:number,masterId:client_number})
+                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: customer_id,number:customer_number,masterId:client_number})
             },
             /**
              * 发送图片消息
