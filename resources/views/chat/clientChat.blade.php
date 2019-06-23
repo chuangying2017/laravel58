@@ -211,6 +211,7 @@
                                     othis.up_recv_time = (new Date(data.sendTime)).getTime();
                                 }
                             }
+
                             switch (data.action) {
                                 case 101: {
                                     // 收到 第一次进来的消息
@@ -338,8 +339,14 @@
              * @param client_number 聊天组的id
              */
             broadcastTextMessage : function (content,customer_id,customer_number,client_number) {
-
-                this.release('Customer', 'sendPersonal', {content: content, type: 'text',toUserFd: customer_id,number:customer_number,masterId:client_number})
+                this.release('Customer', 'sendPersonal', {
+                    content: content,
+                    type: 'text',
+                    toUserFd: customer_id,
+                    number:customer_number,
+                    masterId:client_number,
+                    send:client_number
+                })
             },
             /**
              * 发送图片消息
@@ -350,7 +357,14 @@
              */
             broadcastImageMessage: function (content,customer_id,customer_number,client_number) {
 
-                this.release('Customer', 'sendPersonal', {content: content, type: 'image',toUserFd:customer_id,number:customer_number,masterId:client_number})
+                this.release('Customer', 'sendPersonal', {
+                    content: content,
+                    type: 'image',
+                    toUserFd:customer_id,
+                    number:customer_number,
+                    masterId:client_number,
+                    send:client_number
+                })
             },
             picture              : function () {
                 var input = document.getElementById("fileInput");

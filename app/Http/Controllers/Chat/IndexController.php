@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Chat;
 
+use App\Model\Customer;
 use App\Model\SessionRecord;
 use App\Repository\Chat\Member;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -45,7 +46,15 @@ class IndexController extends Controller
 
             try{
                 $user = decrypt($string);
-                $arr['customer'] = $user instanceof Model ? $user->toArray() : $user;
+
+                $user = $user->find($user->id);
+
+                if (in_array($user->status, Customer::LOGIN_STATUS))
+                {
+                    return redirect()->action('RedirectController@qrcodeDecode',['string'=>$request->input('qrcode')]);
+                }
+
+                $arr['customer'] = $user->toArray();
                 $arr['customer']['avatar'] = makeGravatar($arr['customer']['number']. '@swoole.com');
             }catch (DecryptException $exception)
             {
@@ -102,5 +111,12 @@ class IndexController extends Controller
         $arr = $this->member->select_session($request->all());
 
         return response()->json(['status' => 1, 'msg'=> $arr]);
+    }
+
+    public function updateAvatar(Request $request)
+    {
+        $path = Storage::disk('public')->putFile('chat_avatar', $request->file('image'),'public');
+
+        return response()->json(['status' => 1, 'path' => Storage::url($path)]);
     }
 }

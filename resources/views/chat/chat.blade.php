@@ -19,7 +19,8 @@
         <div class="online_window">
             <div class="me_info">
                 <div class="me_item">
-                    <div class="me_avatar">
+                    <div class="me_avatar" @click="updateAvatar">
+                        <input type="file" style="display: none;" accept="image/*" id="updateAvatar" >
                         <img :src="currentUser.avatar" alt="">
                     </div>
                     <div class="me_status">
@@ -136,6 +137,13 @@
         @else
             nickname = '{{$user->name}}';
         @endif
+    var avatar;
+
+        @if(!$user->avatar)
+            avatar = '';
+            @else
+            avatar = '{{get_host() . $user->avatar}}';
+        @endif
 
     var Vm = new Vue({
         el        : '#chat',
@@ -146,7 +154,7 @@
             ReconnectTimer   : null,
             HeartBeatTimer   : null,
             ReconnectBox     : null,
-            currentUser      : {number: '{{$user->number}}', intro: '-----------', fd: 0, avatar: 0,name:nickname},
+            currentUser      : {number: '{{$user->number}}', intro: '-----------', fd: 0, avatar: avatar,name:nickname},
             roomUser         : {},
             roomChat         : [],
             up_recv_time     : 0,
@@ -212,7 +220,60 @@
                             var reader = new FileReader();
                             reader.readAsDataURL(file);
                             reader.onload = function (e) {
-                                othis.broadcastImageMessage(data.path,othis.customer_id,othis.chatCurrent_number,othis.currentUser.number)
+                                othis.broadcastImageMessage(
+                                    data.path,
+                                    othis.customer_id,
+                                    othis.chatCurrent_number,
+                                    othis.currentUser.name,
+                                    othis.currentUser.number
+                                )
+                            }
+                        }
+                    },error:function(err,type){
+                        console.log(err,type)
+                    }
+                };
+                $.ajax(options);
+            }
+
+            var updateAvatar = document.getElementById('updateAvatar');
+
+            updateAvatar.addEventListener('change',updateAvatarFile, false);
+
+            function updateAvatarFile()
+            {
+                var file = this.files[0];
+                //判断是否是图片类型
+                if (!/image\/\w+/.test(file.type)) {
+                    alert("只能选择图片");
+                    return false;
+                }
+                if (file.size > 8388608) {
+                    alert('图片大小不能超过8MB');
+                    return false;
+                }
+
+                var formData = new FormData();
+                formData.append('image', file);
+
+                var options = {
+                    url: '{{route('chat.avatar_update')}}',
+                    data: formData,
+                    type: 'post',
+                    dataType:'json',
+                    processData: false,
+                    contentType: false,
+                    success: function(data)
+                    {
+                        if (data.status == 1)
+                        {
+                            var reader = new FileReader();
+                            reader.readAsDataURL(file);
+                            reader.onload = function (e) {
+                                othis.release('index','updateAvatar', {
+                                    number:othis.currentUser.number,
+                                    avatar:data.path
+                                })
                             }
                         }
                     },error:function(err,type){
@@ -248,12 +309,13 @@
                     cus.customer_id = othis.customer_id;
                     cus.number = othis.currentUser.number;
                     cus.name = othis.currentUser.name;
+                    cus.avatar = othis.currentUser.avatar;
                     othis.release('index', 'info',cus); //插入在线列表
                    // othis.release('index', 'online');
                     othis.websocketInstance.onmessage = function (ev) {
                         try {
                             var data = JSON.parse(ev.data);
-                            console.log(data)
+
                             if (data.sendTime) {
                                 if (othis.up_recv_time + 10 * 1000 > (new Date(data.sendTime)).getTime()) {
                                     othis.up_recv_time = (new Date(data.sendTime)).getTime();
@@ -362,7 +424,29 @@
                                 }
                                 case 203: {
                                     // 将新用户插入会话 列表 用户上线
-                                    othis.$set(othis.roomUser, 'user' + data.info.number, data.info);
+                                    let number = data.info.number;
+                                    othis.$set(othis.roomUser, 'user' + number, data.info);
+
+                                    let arr = [othis.chatCurrent_number,othis.currentUser.number];
+
+                                    let msg = {
+                                        type   : 'tips',
+                                        content: ' ' + number + ' 上线啦',
+                                    };
+                                    if (arr.includes(number))
+                                    {
+
+                                        othis.roomChat.push(msg);
+
+                                        let nickname = $('div.windows_top_left').find('div.user-nickname');
+
+                                        let nickname_text = number + '&nbsp;<span style="color: #62c462;">'+'(在线)'+'</span>';
+
+                                        nickname.html(nickname_text);
+                                    }
+
+                                    othis.userData[number].push(msg);
+
                                     break;
                                 }
                                 case 204: {
@@ -376,11 +460,18 @@
                                     if (arr.includes(data.number))
                                     {
                                         othis.roomChat.push(msg);
-                                    }else{
-                                        othis.userData[data.number].push(msg);
+
+                                        let nickname = $('div.windows_top_left').find('div.user-nickname');
+
+                                        let nickname_text = data.number + '&nbsp;<span style="color: #a0a072;">'+'(离线)'+'</span>';
+
+                                        nickname.html(nickname_text);
                                     }
-                                    // othis.$delete(othis.roomUser, 'user' + data.number);
-                                    console.log(204,data);
+
+                                    othis.userData[data.number].push(msg);
+
+                                    othis.roomUser['user' + data.number].status = 'inactive';
+
                                     break;
                                 }
                                 case 205:{
@@ -392,7 +483,7 @@
                                         dataType:'json',
                                         type: 'POST',
                                         success: function (data) {
-                                            console.log(data)
+
                                         },error:function (res,type) {
                                             console.log(res,type)
                                         }
@@ -406,13 +497,19 @@
                                 }
                                 case 207:{
                                     /** 更新所有的会话列表 */
-
                                     for (let v in data.info)
                                     {
                                         let vs = data.info[v];
 
                                         othis.$set(othis.roomUser, 'user' + vs.number, vs);
                                     }
+
+                                    break;
+                                }
+                                case 208:{
+                                    /** avatar update */
+
+                                    othis.currentUser.avatar = othis.daemon_url + data.info.avatar;
 
                                     break;
                                 }
@@ -463,10 +560,19 @@
              * @param number 客户号
              * @param name 客服名称
              */
-            broadcastTextMessage : function (content,customer_id,number,name) {
+            broadcastTextMessage : function (content,customer_id,number,name,customer_number) {
 
                 this.release('Customer', 'sendPersonal',
-                    {content: content, type: 'text',toUserFd:customer_id,number:number,masterId:number,mode:'customer',name:name}
+                    {
+                        content: content,
+                        type: 'text',
+                        toUserFd:customer_id,
+                        number:number,
+                        masterId:number,
+                        mode:'customer',
+                        name:name,
+                        send:customer_number
+                    }
                     )
             },
             /**
@@ -475,15 +581,25 @@
              * @param customer_id 客服id
              * @param number 客户号
              * @param name 客服名称
+             * @param customer_number 客服编号
              */
-            broadcastImageMessage: function (content,customer_id,number,name) {
+            broadcastImageMessage: function (content,customer_id,number,name,customer_number) {
 
                 this.release('Customer', 'sendPersonal',
-                    {content: content, type: 'image',toUserFd:customer_id,number:number,masterId:number,mode:'customer',name:name}
+                    {
+                        content: content,
+                        type: 'image',
+                        toUserFd:customer_id,
+                        number:number,
+                        masterId:number,
+                        mode:'customer',
+                        name:name,
+                        send:customer_number
+                    }
                     )
             },
             picture              : function () {
-                var input = document.getElementById("fileInput");
+                let input = document.getElementById("fileInput");
                 input.click();
             },
             /**
@@ -504,8 +620,14 @@
 
                 if (content.trim() !== '') {
                     if (this.websocketInstance && this.websocketInstance.readyState === 1) {
-                        console.log(othis.customer_id,othis.chatCurrent_number,othis.currentUser.name);
-                        this.broadcastTextMessage(content,othis.customer_id,othis.chatCurrent_number,othis.currentUser.name);
+
+                        this.broadcastTextMessage(
+                            content,
+                            othis.customer_id,
+                            othis.chatCurrent_number,
+                            othis.currentUser.name,
+                            othis.currentUser.number
+                        );
                         textInput.val('');
                     } else {
                         layer.tips('连接已断开', '.windows_input', {
@@ -552,11 +674,11 @@
             },
             removeSession: function(number){
                     let othis = this;
-                    console.log(number,othis.currentUser.number);
+
                     othis.release('Customer','deleteSessionRecord', {customer_number:othis.currentUser.number,client_number:number});
             },
             session_record: function(client_number){
-                console.log(client_number);
+
                 let othis = this;
                 $.ajax({
                     url:'{{route('chat.sessionRecord')}}',
@@ -565,7 +687,7 @@
                     type:'POST',
                     success: function(data)
                     {
-                        console.log(data);
+
                         othis.roomChat = [];
                         for (let i =0; i < data.msg.length; i++)
                         {
@@ -589,25 +711,40 @@
 
                         }
 
-                        var redPoint = $('#' + client_number);
+                        let redPoint = $('#' + client_number);
+
+                        let number = client_number;
+
+                        if (othis.roomUser['user' + client_number].status == 'inactive')
+                        {
+                            client_number += '&nbsp;<span style="color: #a0a072;">'+'(离线)'+'</span>';
+                        }else{
+                            client_number += '&nbsp;<span style="color: #62c462;">'+'(在线)'+'</span>';
+                        }
 
                         redPoint.text('');
 
                         redPoint.removeClass('news_note');
 
-                        $('div.windows_top_left').find('div.user-nickname').text(client_number);
+                        $('div.windows_top_left').find('div.user-nickname').html(client_number);
 
                         $('.online_item.background-user').removeClass('background-user');
 
                         redPoint.parent().parent().addClass('background-user');
 
-                        othis.chatCurrent_number = client_number;
+                        othis.chatCurrent_number = number;
 
                     },error:function(error,type)
                     {
                         console.log(error,type);
                     }
                 })
+            },
+            updateAvatar: function()
+            {
+                let input = document.getElementById('updateAvatar');
+
+                input.click();
             }
         },
         computed  : {

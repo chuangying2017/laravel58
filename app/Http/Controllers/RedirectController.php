@@ -45,7 +45,7 @@ class RedirectController extends Controller
 
             $random = $customer->random();
 
-            return redirect()->action('Chat\\IndexController@clientChat',['string' => encrypt($random)]);
+            return redirect()->action('Chat\\IndexController@clientChat',['string' => encrypt($random), 'qrcode' => $string]);
         }catch (DecryptException $exception)
         {
             return $exception->getMessage();

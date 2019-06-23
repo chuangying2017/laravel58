@@ -38,6 +38,7 @@ Route::group(['prefix'=>'chat', 'namespace' => 'Chat'],function (){
     Route::get('client', 'IndexController@clientChat')->name('chat.client');
     Route::post('uploadFile', 'IndexController@uploadFile')->name('chat.file_upload');
     Route::post('session_record', 'IndexController@sessionRecord')->name('chat.sessionRecord');
+    Route::post('update_avatar', 'IndexController@updateAvatar')->name('chat.avatar_update');
 });
 
 //重定向 提示信息
