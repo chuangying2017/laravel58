@@ -18,6 +18,8 @@ class IndexController extends Controller
 {
     protected $member;
 
+    protected $ws = 'ws://47.105.186.89:9501';
+
     public function __construct(Member $member)
     {
         $this->member = $member;
@@ -26,7 +28,7 @@ class IndexController extends Controller
     //客服登录的聊天系统
     public function chatShow(Request $request)
     {
-        return view('chat.chat', ['server' => 'ws://47.105.186.89:9501','user' => $request->session()->get('user')]);
+        return view('chat.chat', ['server' => $this->ws,'user' => $request->session()->get('user')]);
     }
 
     public function login()
