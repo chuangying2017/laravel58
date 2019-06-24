@@ -36,7 +36,7 @@ class IndexController extends Controller
 
     public function clientChat(Request $request)
     {
-        $arr =  ['server' => 'ws://47.105.186.89:9501'];
+        $arr =  ['server' => $this->ws];
 
         $string = $request->input('string',null);
 
@@ -76,7 +76,8 @@ class IndexController extends Controller
             }else{
                 $number = 'KF_'.$random;
                 $avatar = makeGravatar($random. '@swoole.com');
-                $array = ['number' => $number, 'avatar' => $avatar,'intro' => '客服咨询'];
+                $arr_name = config('app.client_name');
+                $array = ['number' => $number, 'avatar' => $avatar,'intro' => '客服咨询', 'name' => $arr_name[array_rand($arr_name,1)]];
                 $predis->setex($ip,3600,serialize($array));
             }
 

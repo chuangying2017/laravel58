@@ -96,7 +96,7 @@
             ReconnectTimer   : null,
             HeartBeatTimer   : null,
             ReconnectBox     : null,
-            currentUser      : {number: '{{$client['number']}}', intro: '{{$client['intro']}}', fd: 0, avatar: '{{$client['avatar']}}'},
+            currentUser      : {number: '{{$client['number']}}', intro: '{{$client['intro']}}', fd: 0, avatar: '{{$client['avatar']}}',name:'{{$client['name']}}'},
             roomUser         : {},
             roomChat         : [],
             up_recv_time     : 0,
@@ -193,7 +193,7 @@
                     }, 1000 * 30);
                     // 请求获取自己的用户信息和在线列表
                      othis.release('client', 'info', {
-                         'client':{'avatar':'{{$client['avatar']}}', 'number': '{{$client['number']}}'},
+                         'client':{'avatar':'{{$client['avatar']}}', 'number': '{{$client['number']}}', 'name':'{{$client['name']}}'},
                          'customer': {
                              'customer_id': '{{$customer['id']}}',
                              'number': '{{$customer['number']}}',
@@ -214,17 +214,8 @@
 
                             switch (data.action) {
                                 case 101: {
-                                    // 收到 第一次进来的消息
-                                    othis.roomChat.push({
-                                        type    : data.type ? data.type : 'text',
-                                        fd      : 0,
-                                        content : data.content,
-                                        avatar  : '{{$customer['avatar']}}',
-                                        number: data.number,
-                                        name:data.name
-                                    });
-                                    othis.customer_id = data.customer_id; //第一次进来选择客服的Id
-                                    othis.customer_number = data.number; //客服编号
+                                    othis.customer_id = data.customer_id;
+                                    othis.customer_number = data.number;
                                     break;
                                 }
                                 case 103 : {
@@ -433,6 +424,7 @@
                             {
                                 append_data.number = arr1.client_number;
                                 append_data.avatar = othis.currentUser.avatar;
+                                append_data.name = arr1.client_name;
                             }else{
                                 append_data.number = arr1.customer.number;
                                 append_data.name = arr1.customer.name;

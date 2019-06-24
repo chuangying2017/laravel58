@@ -224,7 +224,6 @@
                                     data.path,
                                     othis.customer_id,
                                     othis.chatCurrent_number,
-                                    othis.currentUser.name,
                                     othis.currentUser.number
                                 )
                             }
@@ -560,7 +559,7 @@
              * @param number 客户号
              * @param name 客服名称
              */
-            broadcastTextMessage : function (content,customer_id,number,name,customer_number) {
+            broadcastTextMessage : function (content,customer_id,number,customer_number) {
 
                 this.release('Customer', 'sendPersonal',
                     {
@@ -570,7 +569,6 @@
                         number:number,
                         masterId:number,
                         mode:'customer',
-                        name:name,
                         send:customer_number
                     }
                     )
@@ -583,7 +581,7 @@
              * @param name 客服名称
              * @param customer_number 客服编号
              */
-            broadcastImageMessage: function (content,customer_id,number,name,customer_number) {
+            broadcastImageMessage: function (content,customer_id,number,customer_number) {
 
                 this.release('Customer', 'sendPersonal',
                     {
@@ -593,7 +591,7 @@
                         number:number,
                         masterId:number,
                         mode:'customer',
-                        name:name,
+
                         send:customer_number
                     }
                     )
@@ -625,7 +623,7 @@
                             content,
                             othis.customer_id,
                             othis.chatCurrent_number,
-                            othis.currentUser.name,
+
                             othis.currentUser.number
                         );
                         textInput.val('');
@@ -697,7 +695,7 @@
                             {
                                 append_data.number = arr1.client_number;
                                 append_data.avatar = 'https://www.gravatar.com/avatar/772270462a6954311c9a96b1f441a6f4?s=120&amp;d=identicon';
-                                append_data.name = null;
+                                append_data.name = arr1.client_name;
                             }else{
                                 append_data.number = othis.currentUser.number;
                                 append_data.name = othis.currentUser.name;
