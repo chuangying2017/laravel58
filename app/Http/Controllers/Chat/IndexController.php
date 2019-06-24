@@ -25,7 +25,7 @@ class IndexController extends Controller
         $this->member = $member;
     }
 
-    //客服登录的聊天系统
+    //客服登录的聊天系统 好像成功上传了 现在测试一下
     public function chatShow(Request $request)
     {
         return view('chat.chat', ['server' => $this->ws,'user' => $request->session()->get('user')]);
