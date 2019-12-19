@@ -13,14 +13,11 @@ class MerchantController extends Controller
 
     protected $path = 'interface/memberReg';
 
-    protected $url;
-
     protected $businessChannel;
 
 
     public function __construct(BusinessChannel $businessChannel)
     {
-        $this->url = CommonPayConfig::$url . $this->path;
 
         $this->businessChannel = $businessChannel;
     }
@@ -30,6 +27,8 @@ class MerchantController extends Controller
      */
     public function register()
     {
+        $url = CommonPayConfig::$url . $this->path;
+
         $arr = [
             "verCode" => '1001',
             "merCode" => date('YmdHis') . strtoupper(substr(uniqid(),6,2)),
@@ -45,30 +44,30 @@ class MerchantController extends Controller
             "settleAccType" => '1'
         ];
 
-        $sign = $this->businessChannel->sign($arr, CommonPayConfig::$md5);
+        $res = $this->businessChannel->verifyData($url, $arr);
 
-        $encryptData = $this->businessChannel->encrypt($arr,'base64', CommonPayConfig::$aes);
+        dump($res);
+    }
 
-        $reqData = array(
-            'orgCode'       =>  CommonPayConfig::$orgCode,
-            'encryptData'   =>  $encryptData,
-            'signData'      =>  $sign,
-        );
+    /**
+     * 4.1.2商户业务开通接口
+     */
+    public function businessLiberal()
+    {
+        $path = 'interface/memberBus';
 
-        Log::info('保存注册商户信息',$arr);
+        $url = CommonPayConfig::$url . $path;
 
-        $response = $this->businessChannel->curl_post($this->url, $reqData);
+        $arr = [
+            "drawFee" => 0.5,
+            "tradeRate" => 0.006,
+            "verCode" => 1001,
+            "chMerCode" => 'C030019121938004',
+            "busCode" => 2001
+        ];
 
-        $result = json_decode($response, true);
-
-        $resData = $this->businessChannel->decrypt($result['encryptData'], CommonPayConfig::$aes);
-
-        $resDataJson = json_decode($resData,true);
-
-        Log::info($resDataJson);
-        //验签
-        $this->businessChannel->checkSign($result['signData'],$resDataJson, CommonPayConfig::$md5);
-
-        dump($resDataJson);
+        $res = $this->businessChannel->verifyData($url, $arr);
+        Log::info($res);
+        dump($res);
     }
 }

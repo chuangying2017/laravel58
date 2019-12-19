@@ -122,4 +122,5 @@ Route::get('test_post', 'PayTestController@pay_test');
 
 Route::group(['prefix'=>'pay'], function(){
     Route::get('register', 'MerchantController@register');
+    Route::get('memberBus', 'MerchantController@businessLiberal');
 });

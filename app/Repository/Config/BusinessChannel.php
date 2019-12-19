@@ -4,6 +4,8 @@
 namespace App\Repository\Config;
 
 
+use Illuminate\Support\Facades\Log;
+
 class BusinessChannel
 {
     const iv = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
@@ -145,5 +147,34 @@ class BusinessChannel
         }else{
             return false;
         }
+    }
+
+    public function verifyData($url, $arr)
+    {
+        $sign = $this->sign($arr, CommonPayConfig::$md5);
+
+        $encryptData = $this->encrypt($arr,'base64', CommonPayConfig::$aes);
+
+        $reqData = array(
+            'orgCode'       =>  CommonPayConfig::$orgCode,
+            'encryptData'   =>  $encryptData,
+            'signData'      =>  $sign,
+        );
+
+        Log::info('保存注册商户信息',$arr);
+
+        $response = $this->curl_post($url, $reqData);
+
+        $result = json_decode($response, true);
+
+        $resData = $this->decrypt($result['encryptData'], CommonPayConfig::$aes);
+
+        $resDataJson = json_decode($resData,true);
+
+        Log::info($resDataJson);
+        //验签
+        $bool = $this->checkSign($result['signData'],$resDataJson, CommonPayConfig::$md5);
+
+        return ['status'=>$bool, 'data' => $resDataJson];
     }
 }
