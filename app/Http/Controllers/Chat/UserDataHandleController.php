@@ -20,12 +20,12 @@ class UserDataHandleController extends Controller
 
         if ($res)
         {
-            $status = $res->user()->first()->status;
-
-            if (in_array($status, [User::STATUS_DELETE,User::STATUS_FORBIDDEN]))
-            {
-                return ['status'=>'2','msg'=>'当前代理商被禁用'];
-            }
+//            $status = $res->user()->first()->status;
+//
+//            if (in_array($status, [User::STATUS_DELETE,User::STATUS_FORBIDDEN]))
+//            {
+//                return ['status'=>'2','msg'=>'当前代理商被禁用'];
+//            }
 
             if (in_array($res['status'],['inactive','discard']))
             {

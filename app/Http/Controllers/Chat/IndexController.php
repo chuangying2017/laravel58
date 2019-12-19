@@ -18,7 +18,7 @@ class IndexController extends Controller
 {
     protected $member;
 
-    protected $ws = 'ws://47.105.186.89:9501';
+    protected $ws = 'ws://192.168.2.127:9501';
 
     public function __construct(Member $member)
     {
@@ -47,9 +47,9 @@ class IndexController extends Controller
             $random = character(8);
 
             try{
-                $user = decrypt($string);
+//                $user = decrypt($string);
 
-                $user = $user->find($user->id);
+                $user = Customer::find($string);
 
                 if (in_array($user->status, Customer::LOGIN_STATUS))
                 {
@@ -66,22 +66,10 @@ class IndexController extends Controller
             }
             //生成客户类型
 
-            $ip = $request->ip();
-
-            $predis = new Client();
-
-            $string = $predis->get($ip);
-
-            if ($string)
-            {
-                $array = unserialize($string);
-            }else{
-                $number = 'KF_'.$random;
-                $avatar = makeGravatar($random. '@swoole.com');
-                $arr_name = config('app.client_name');
-                $array = ['number' => $number, 'avatar' => $avatar,'intro' => '客服咨询', 'name' => $arr_name[array_rand($arr_name,1)]];
-                $predis->setex($ip,3600,serialize($array));
-            }
+            $number = 'KF_'.$random;
+            $avatar = makeGravatar($random. '@swoole.com');
+            $arr_name = config('app.client_name');
+            $array = ['number' => $number, 'avatar' => $avatar,'intro' => '客服咨询', 'name' => $arr_name[array_rand($arr_name,1)]];
 
             $arr['client'] = $array;
 

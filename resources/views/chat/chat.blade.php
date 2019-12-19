@@ -267,7 +267,8 @@
                         if (data.status == 1)
                         {
                             var reader = new FileReader();
-                            reader.readAsDataURL(file);
+                            // reader.readAsDataURL(file);
+                            othis.currentUser.avatar = data.path;
                             reader.onload = function (e) {
                                 othis.release('index','updateAvatar', {
                                     number:othis.currentUser.number,
