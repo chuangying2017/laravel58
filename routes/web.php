@@ -118,9 +118,10 @@ Route::get('/home', function (){
     return redirect('admin/index');
 })->name('home');
 
-Route::get('test_post', 'PayTestController@pay_test');
+
 
 Route::group(['prefix'=>'pay'], function(){
+    Route::get('test_post', 'PayTestController@pay_test');
     Route::get('register', 'MerchantController@register');
     Route::get('memberBus', 'MerchantController@businessLiberal');
 });

@@ -67,7 +67,7 @@ class MerchantController extends Controller
         ];
 
         $res = $this->businessChannel->verifyData($url, $arr);
-        Log::info($res);
+
         dump($res);
     }
 }
